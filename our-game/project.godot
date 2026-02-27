@@ -11,15 +11,15 @@ config_version=5
 [application]
 
 config/name="OurGame"
-run/main_scene="res://scenes/app/Main.tscn"
+run/main_scene="res://core/scenes/Main.tscn"
 config/features=PackedStringArray("4.6", "Forward Plus")
 config/icon="res://icon.svg"
 
 [autoload]
 
-GameData="*res://scripts/systems/game_data.gd"
-SceneRouter="*res://scripts/systems/scene_router.gd"
-GameManager="*uid://bqm6jfsxx2uj4"
+GameData="*res://shared/utils/game_data.gd"
+SceneRouter="*res://core/scene_router.gd"
+GameManager="*res://core/game_manager.gd"
 
 [physics]
 
