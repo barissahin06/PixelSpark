@@ -13,10 +13,7 @@ func go_to(route: String) -> void:
 		push_error("SceneRouter: Unknown route '%s'." % route)
 		return
 
-	var change_error := get_tree().change_scene_to_file(scene_path)
-	if change_error != OK:
-		push_error("SceneRouter: Could not open route '%s' (%s)." % [route, scene_path])
-		return
+	get_tree().call_deferred("change_scene_to_file", scene_path)
 
 	current_route = route
 
