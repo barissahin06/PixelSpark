@@ -1,0 +1,14 @@
+[
+  {
+    "id": "glad_recruit_01",
+    "display_name": "Recruit I",
+    "starting_health": 30,
+    "starting_stamina": 3
+  },
+  {
+    "id": "glad_recruit_02",
+    "display_name": "Recruit II",
+    "starting_health": 28,
+    "starting_stamina": 4
+  }
+]

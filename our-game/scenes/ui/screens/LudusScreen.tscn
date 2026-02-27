@@ -1,0 +1,49 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/ludus_screen.gd" id="1_56k13"]
+
+[node name="LudusScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_56k13")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 24
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 24
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 12
+
+[node name="TitleLabel" type="Label" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Ludus Management (MVP Skeleton)"
+
+[node name="GladiatorCountLabel" type="Label" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Loaded gladiators: 0"
+
+[node name="DescriptionLabel" type="Label" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Gameplay systems are intentionally not implemented yet."
+autowrap_mode = 2
+
+[node name="ToBattleButton" type="Button" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Switch To Battle Scene"
+
+[connection signal="pressed" from="MarginContainer/VBoxContainer/ToBattleButton" to="." method="_on_to_battle_button_pressed"]
