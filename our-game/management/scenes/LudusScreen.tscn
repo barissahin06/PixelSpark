@@ -1,8 +1,9 @@
-[gd_scene load_steps=2 format=3 uid="uid://c54y6p78mqn1t"]
+[gd_scene format=3 uid="uid://c54y6p78mqn1t"]
 
-[ext_resource type="Script" path="res://management/scripts/ludus_screen.gd" id="1_56k13"]
+[ext_resource type="Script" uid="uid://b603eawvmwmw0" path="res://management/scripts/ludus_screen.gd" id="1_56k13"]
+[ext_resource type="Texture2D" uid="uid://bap3rveaguaeo" path="res://assets/ui/ludus arena base.jpeg" id="2_e4gdd"]
 
-[node name="LudusScreen" type="Control"]
+[node name="LudusScreen" type="Control" unique_id=445349566]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -11,7 +12,17 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_56k13")
 
-[node name="MarginContainer" type="MarginContainer" parent="."]
+[node name="TextureRect" type="TextureRect" parent="." unique_id=313416786]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_e4gdd")
+metadata/_edit_use_anchors_ = true
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=876331981]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -23,128 +34,146 @@ theme_override_constants/margin_top = 24
 theme_override_constants/margin_right = 24
 theme_override_constants/margin_bottom = 24
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer" unique_id=618664920]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/separation = 12
 
-[node name="TopBar" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+[node name="TopBar" type="HBoxContainer" parent="MarginContainer/VBoxContainer" unique_id=1661049850]
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="TitleLabel" type="Label" parent="MarginContainer/VBoxContainer/TopBar"]
+[node name="TitleLabel" type="Label" parent="MarginContainer/VBoxContainer/TopBar" unique_id=496868404]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 24
 text = "Ludus Management"
 
-[node name="GoldLabel" type="Label" parent="MarginContainer/VBoxContainer/TopBar"]
+[node name="GoldLabel" type="Label" parent="MarginContainer/VBoxContainer/TopBar" unique_id=1296694002]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.843137, 0, 1)
 theme_override_font_sizes/font_size = 20
 text = "Gold: 100"
 
-[node name="FoodLabel" type="Label" parent="MarginContainer/VBoxContainer/TopBar"]
+[node name="FoodLabel" type="Label" parent="MarginContainer/VBoxContainer/TopBar" unique_id=1104978526]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.603922, 0.803922, 0.196078, 1)
 theme_override_font_sizes/font_size = 20
 text = "Food: 50"
 
-[node name="DayLabel" type="Label" parent="MarginContainer/VBoxContainer/TopBar"]
+[node name="DayLabel" type="Label" parent="MarginContainer/VBoxContainer/TopBar" unique_id=1568832160]
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
 text = "Day: 1"
 
-[node name="HSeparator" type="HSeparator" parent="MarginContainer/VBoxContainer"]
+[node name="HSeparator" type="HSeparator" parent="MarginContainer/VBoxContainer" unique_id=1169386060]
 layout_mode = 2
 
-[node name="MainContent" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+[node name="MainContent" type="HBoxContainer" parent="MarginContainer/VBoxContainer" unique_id="792825976"]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/separation = 24
 
-[node name="RosterPanel" type="PanelContainer" parent="MarginContainer/VBoxContainer/MainContent"]
+[node name="RosterPanel" type="PanelContainer" parent="MarginContainer/VBoxContainer/MainContent" unique_id=245699302]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/MainContent/RosterPanel"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/MainContent/RosterPanel" unique_id=1319022340]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/MainContent/RosterPanel/VBoxContainer"]
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/MainContent/RosterPanel/VBoxContainer" unique_id=386484871]
 layout_mode = 2
 theme_override_font_sizes/font_size = 18
 text = "Your Gladiators"
 horizontal_alignment = 1
 
-[node name="RosterList" type="VBoxContainer" parent="MarginContainer/VBoxContainer/MainContent/RosterPanel/VBoxContainer"]
+[node name="RosterList" type="VBoxContainer" parent="MarginContainer/VBoxContainer/MainContent/RosterPanel/VBoxContainer" unique_id=244113831]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="DetailsPanel" type="PanelContainer" parent="MarginContainer/VBoxContainer/MainContent"]
+[node name="DetailsPanel" type="PanelContainer" parent="MarginContainer/VBoxContainer/MainContent" unique_id=1801975999]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/MainContent/DetailsPanel"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/MainContent/DetailsPanel" unique_id=994677202]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/MainContent/DetailsPanel/VBoxContainer"]
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/MainContent/DetailsPanel/VBoxContainer" unique_id=2013621134]
 layout_mode = 2
 theme_override_font_sizes/font_size = 18
 text = "Gladiator Details"
 horizontal_alignment = 1
 
-[node name="StatsLabel" type="Label" parent="MarginContainer/VBoxContainer/MainContent/DetailsPanel/VBoxContainer"]
+[node name="StatsLabel" type="Label" parent="MarginContainer/VBoxContainer/MainContent/DetailsPanel/VBoxContainer" unique_id=1498742922]
 layout_mode = 2
 text = "Select a gladiator to view stats."
 autowrap_mode = 2
 
-[node name="ActionsContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/MainContent/DetailsPanel/VBoxContainer"]
+[node name="ActionsContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/MainContent/DetailsPanel/VBoxContainer" unique_id=1069703233]
 layout_mode = 2
-alignment = 1
 theme_override_constants/separation = 12
+alignment = 1
 
-[node name="FeedButton" type="Button" parent="MarginContainer/VBoxContainer/MainContent/DetailsPanel/VBoxContainer/ActionsContainer"]
+[node name="FeedButton" type="Button" parent="MarginContainer/VBoxContainer/MainContent/DetailsPanel/VBoxContainer/ActionsContainer" unique_id=1350690586]
 layout_mode = 2
 text = "Feed (-6 Food)"
 
-[node name="HealButton" type="Button" parent="MarginContainer/VBoxContainer/MainContent/DetailsPanel/VBoxContainer/ActionsContainer"]
+[node name="HealButton" type="Button" parent="MarginContainer/VBoxContainer/MainContent/DetailsPanel/VBoxContainer/ActionsContainer" unique_id=928809272]
 layout_mode = 2
 text = "Heal Buff (-5 Gold)"
 
-[node name="TrainButton" type="Button" parent="MarginContainer/VBoxContainer/MainContent/DetailsPanel/VBoxContainer/ActionsContainer"]
+[node name="TrainButton" type="Button" parent="MarginContainer/VBoxContainer/MainContent/DetailsPanel/VBoxContainer/ActionsContainer" unique_id=1134421187]
 layout_mode = 2
 text = "Train (3 Days)"
 
-[node name="HSeparator2" type="HSeparator" parent="MarginContainer/VBoxContainer"]
+[node name="UpgradeContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/MainContent/DetailsPanel/VBoxContainer" unique_id=1712909604]
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 12
+alignment = 1
+
+[node name="UpgradeTankButton" type="Button" parent="MarginContainer/VBoxContainer/MainContent/DetailsPanel/VBoxContainer/UpgradeContainer" unique_id=597439271]
+layout_mode = 2
+text = "To Tank (-10G)"
+
+[node name="UpgradeFighterButton" type="Button" parent="MarginContainer/VBoxContainer/MainContent/DetailsPanel/VBoxContainer/UpgradeContainer" unique_id=411621067]
+layout_mode = 2
+text = "To Fighter (-10G)"
+
+[node name="UpgradeAssassinButton" type="Button" parent="MarginContainer/VBoxContainer/MainContent/DetailsPanel/VBoxContainer/UpgradeContainer" unique_id=1047586129]
+layout_mode = 2
+text = "To Assassin (-10G)"
+
+[node name="HSeparator2" type="HSeparator" parent="MarginContainer/VBoxContainer" unique_id=357358843]
 layout_mode = 2
 
-[node name="BottomActions" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+[node name="BottomActions" type="HBoxContainer" parent="MarginContainer/VBoxContainer" unique_id=1484511758]
 layout_mode = 2
 theme_override_constants/separation = 20
 alignment = 1
 
-[node name="MarketplaceButton" type="Button" parent="MarginContainer/VBoxContainer/BottomActions"]
+[node name="MarketplaceButton" type="Button" parent="MarginContainer/VBoxContainer/BottomActions" unique_id=2013370041]
 custom_minimum_size = Vector2(200, 50)
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
 text = "Marketplace"
 
-[node name="NextDayButton" type="Button" parent="MarginContainer/VBoxContainer/BottomActions"]
+[node name="NextDayButton" type="Button" parent="MarginContainer/VBoxContainer/BottomActions" unique_id=167239333]
 custom_minimum_size = Vector2(200, 50)
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
 text = "Pass Day"
 
-[node name="ToBattleButton" type="Button" parent="MarginContainer/VBoxContainer/BottomActions"]
+[node name="ToBattleButton" type="Button" parent="MarginContainer/VBoxContainer/BottomActions" unique_id=1749177586]
 custom_minimum_size = Vector2(200, 50)
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
 text = "Go To Battle"
 
-[node name="MarketModal" type="ColorRect" parent="."]
+[node name="MarketModal" type="ColorRect" parent="." unique_id=616433077]
 visible = false
 layout_mode = 1
 anchors_preset = 15
@@ -154,7 +183,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 0.784314)
 
-[node name="Panel" type="PanelContainer" parent="MarketModal"]
+[node name="Panel" type="PanelContainer" parent="MarketModal" unique_id=1883821012]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -168,44 +197,40 @@ offset_bottom = 100.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="MarginContainer" type="MarginContainer" parent="MarketModal/Panel"]
+[node name="MarginContainer" type="MarginContainer" parent="MarketModal/Panel" unique_id=1841502009]
 layout_mode = 2
 theme_override_constants/margin_left = 16
 theme_override_constants/margin_top = 16
 theme_override_constants/margin_right = 16
 theme_override_constants/margin_bottom = 16
 
-[node name="VBox" type="VBoxContainer" parent="MarketModal/Panel/MarginContainer"]
+[node name="VBox" type="VBoxContainer" parent="MarketModal/Panel/MarginContainer" unique_id=1322706772]
 layout_mode = 2
 theme_override_constants/separation = 12
 
-[node name="Label" type="Label" parent="MarketModal/Panel/MarginContainer/VBox"]
+[node name="Label" type="Label" parent="MarketModal/Panel/MarginContainer/VBox" unique_id=1853618084]
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
 text = "Marketplace"
 horizontal_alignment = 1
 
-[node name="BuyFoodButton" type="Button" parent="MarketModal/Panel/MarginContainer/VBox"]
+[node name="BuyFoodButton" type="Button" parent="MarketModal/Panel/MarginContainer/VBox" unique_id=896953076]
 layout_mode = 2
 text = "Buy 20 Food (-3 Gold)"
 
-[node name="SellFoodButton" type="Button" parent="MarketModal/Panel/MarginContainer/VBox"]
+[node name="SellFoodButton" type="Button" parent="MarketModal/Panel/MarginContainer/VBox" unique_id=1062640152]
 layout_mode = 2
 text = "Sell 20 Food (+1 Gold)"
 
-[node name="CloseMarketButton" type="Button" parent="MarketModal/Panel/MarginContainer/VBox"]
+[node name="BuySlaveButton" type="Button" parent="MarketModal/Panel/MarginContainer/VBox" unique_id=1038228047]
+layout_mode = 2
+text = "Buy Slave (-25 Gold)"
+
+[node name="CloseMarketButton" type="Button" parent="MarketModal/Panel/MarginContainer/VBox" unique_id=182425715]
 layout_mode = 2
 text = "Close"
 
-[connection signal="pressed" from="MarginContainer/VBoxContainer/MainContent/DetailsPanel/VBoxContainer/ActionsContainer/TrainButton" to="." method="_on_train_button_pressed"]
-[connection signal="pressed" from="MarginContainer/VBoxContainer/BottomActions/MarketplaceButton" to="." method="_on_marketplace_button_pressed"]
-[connection signal="pressed" from="MarginContainer/VBoxContainer/BottomActions/NextDayButton" to="." method="_on_next_day_button_pressed"]
-[connection signal="pressed" from="MarginContainer/VBoxContainer/BottomActions/ToBattleButton" to="." method="_on_to_battle_button_pressed"]
-[connection signal="pressed" from="MarketModal/Panel/MarginContainer/VBox/BuyFoodButton" to="." method="_on_buy_food_button_pressed"]
-[connection signal="pressed" from="MarketModal/Panel/MarginContainer/VBox/SellFoodButton" to="." method="_on_sell_food_button_pressed"]
-[connection signal="pressed" from="MarketModal/Panel/MarginContainer/VBox/CloseMarketButton" to="." method="_on_close_market_button_pressed"]
-
-[node name="TrainModal" type="ColorRect" parent="."]
+[node name="TrainModal" type="ColorRect" parent="." unique_id=24564950]
 visible = false
 layout_mode = 1
 anchors_preset = 15
@@ -215,7 +240,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 0.784314)
 
-[node name="Panel" type="PanelContainer" parent="TrainModal"]
+[node name="Panel" type="PanelContainer" parent="TrainModal" unique_id=1439263822]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -229,47 +254,64 @@ offset_bottom = 120.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="MarginContainer" type="MarginContainer" parent="TrainModal/Panel"]
+[node name="MarginContainer" type="MarginContainer" parent="TrainModal/Panel" unique_id=1527000269]
 layout_mode = 2
 theme_override_constants/margin_left = 16
 theme_override_constants/margin_top = 16
 theme_override_constants/margin_right = 16
 theme_override_constants/margin_bottom = 16
 
-[node name="VBox" type="VBoxContainer" parent="TrainModal/Panel/MarginContainer"]
+[node name="VBox" type="VBoxContainer" parent="TrainModal/Panel/MarginContainer" unique_id=804512294]
 layout_mode = 2
 theme_override_constants/separation = 12
 
-[node name="Label" type="Label" parent="TrainModal/Panel/MarginContainer/VBox"]
+[node name="Label" type="Label" parent="TrainModal/Panel/MarginContainer/VBox" unique_id=1649266416]
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
 text = "Training Facilities"
 horizontal_alignment = 1
 
-[node name="TrainHealthButton" type="Button" parent="TrainModal/Panel/MarginContainer/VBox"]
+[node name="TrainHealthButton" type="Button" parent="TrainModal/Panel/MarginContainer/VBox" unique_id=795631075]
 layout_mode = 2
 text = "+15 Health (-10 Gold)"
 
-[node name="TrainAttackButton" type="Button" parent="TrainModal/Panel/MarginContainer/VBox"]
+[node name="TrainAttackButton" type="Button" parent="TrainModal/Panel/MarginContainer/VBox" unique_id=2045380027]
 layout_mode = 2
 text = "+5 Attack (-10 Gold)"
 
-[node name="TrainDodgeButton" type="Button" parent="TrainModal/Panel/MarginContainer/VBox"]
+[node name="TrainDodgeButton" type="Button" parent="TrainModal/Panel/MarginContainer/VBox" unique_id=1292085546]
 layout_mode = 2
 text = "+0.5 Dodge (-10 Gold)"
 
-[node name="TrainAllButton" type="Button" parent="TrainModal/Panel/MarginContainer/VBox"]
+[node name="TrainAllButton" type="Button" parent="TrainModal/Panel/MarginContainer/VBox" unique_id=1298923959]
 layout_mode = 2
 text = "Buff All Stats (-35 Gold)"
 
-[node name="CloseTrainButton" type="Button" parent="TrainModal/Panel/MarginContainer/VBox"]
+[node name="CloseTrainButton" type="Button" parent="TrainModal/Panel/MarginContainer/VBox" unique_id=1960859540]
 layout_mode = 2
 text = "Close"
 
+[connection signal="pressed" from="MarginContainer/VBoxContainer/MainContent/DetailsPanel/VBoxContainer/ActionsContainer/FeedButton" to="." method="_on_feed_button_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/MainContent/DetailsPanel/VBoxContainer/ActionsContainer/HealButton" to="." method="_on_heal_button_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/MainContent/DetailsPanel/VBoxContainer/ActionsContainer/TrainButton" to="." method="_on_train_button_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/MainContent/DetailsPanel/VBoxContainer/UpgradeContainer/UpgradeTankButton" to="." method="_on_upgrade_tank_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/MainContent/DetailsPanel/VBoxContainer/UpgradeContainer/UpgradeFighterButton" to="." method="_on_upgrade_fighter_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/MainContent/DetailsPanel/VBoxContainer/UpgradeContainer/UpgradeAssassinButton" to="." method="_on_upgrade_assassin_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/BottomActions/MarketplaceButton" to="." method="_on_marketplace_button_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/BottomActions/NextDayButton" to="." method="_on_next_day_button_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/BottomActions/ToBattleButton" to="." method="_on_to_battle_button_pressed"]
+[connection signal="pressed" from="MarketModal/Panel/MarginContainer/VBox/BuyFoodButton" to="." method="_on_buy_food_button_pressed"]
+[connection signal="pressed" from="MarketModal/Panel/MarginContainer/VBox/SellFoodButton" to="." method="_on_sell_food_button_pressed"]
+[connection signal="pressed" from="MarketModal/Panel/MarginContainer/VBox/BuySlaveButton" to="." method="_on_buy_slave_button_pressed"]
+[connection signal="pressed" from="MarketModal/Panel/MarginContainer/VBox/CloseMarketButton" to="." method="_on_close_market_button_pressed"]
 [connection signal="pressed" from="TrainModal/Panel/MarginContainer/VBox/TrainHealthButton" to="." method="_on_train_health_pressed"]
 [connection signal="pressed" from="TrainModal/Panel/MarginContainer/VBox/TrainAttackButton" to="." method="_on_train_attack_pressed"]
 [connection signal="pressed" from="TrainModal/Panel/MarginContainer/VBox/TrainDodgeButton" to="." method="_on_train_dodge_pressed"]
 [connection signal="pressed" from="TrainModal/Panel/MarginContainer/VBox/TrainAllButton" to="." method="_on_train_all_pressed"]
 [connection signal="pressed" from="TrainModal/Panel/MarginContainer/VBox/CloseTrainButton" to="." method="_on_close_train_button_pressed"]
-[connection signal="pressed" from="MarginContainer/VBoxContainer/MainContent/DetailsPanel/VBoxContainer/ActionsContainer/FeedButton" to="." method="_on_feed_button_pressed"]
-[connection signal="pressed" from="MarginContainer/VBoxContainer/MainContent/DetailsPanel/VBoxContainer/ActionsContainer/HealButton" to="." method="_on_heal_button_pressed"]
+
+[connection signal="pressed" from="DoorActions/MarketplaceMenuButton" to="." method="_on_marketplace_menu_pressed"]
+[connection signal="pressed" from="DoorActions/FeedMenuButton" to="." method="_on_feed_menu_pressed"]
+[connection signal="pressed" from="DoorActions/TrainMenuButton" to="." method="_on_train_menu_pressed"]
+[connection signal="pressed" from="ActionModals/FeedModal/Panel/MarginContainer/VBox/CloseFeedButton" to="." method="_on_close_feed_pressed"]
+[connection signal="pressed" from="ActionModals/TrainListModal/Panel/MarginContainer/VBox/CloseTrainListButton" to="." method="_on_close_train_list_pressed"]

@@ -10,24 +10,23 @@ var selected_gladiator: Gladiator = null
 
 func _ready():
 	# Rastgele sayı üretecini başlatır (Event'ler için önemli)
-	randomize() 
+	randomize()
 	update_ui()
 	populate_gladiator_list()
 
 # B - Gladiator Overview Panel
 func update_ui():
 	# GameManager henüz yüklenmediyse hata vermemesi için güvenlik kalkanı
-	if not GameManager: return 
+	if not GameManager: return
 	
 	day_label.text = "Day: " + str(GameManager.current_day)
 	gold_label.text = "Gold: " + str(GameManager.gold)
 	
 	if selected_gladiator:
-		stats_label.text = "Name: %s\nType: %s\nHP: %d/%d\nStamina: %d/%d\nMorale: %d\nStrength: %d" % [
+		stats_label.text = "Name: %s\nType: %s\nHP: %d/%d\nStamina: %d/%d" % [
 			selected_gladiator.g_name, selected_gladiator.type,
 			selected_gladiator.current_hp, selected_gladiator.max_hp,
-			selected_gladiator.current_stamina, selected_gladiator.max_stamina,
-			selected_gladiator.morale, selected_gladiator.strength
+			selected_gladiator.current_stamina, selected_gladiator.max_stamina
 		]
 	else:
 		stats_label.text = "No Gladiator Selected"
@@ -52,7 +51,7 @@ func _on_train_button_pressed():
 
 func _on_rest_button_pressed():
 	if selected_gladiator:
-		selected_gladiator.rest(3, 10) # Stamina +3, Morale +10
+		selected_gladiator.rest(3) # Stamina +3
 		update_ui()
 
 func _on_advance_day_button_pressed():

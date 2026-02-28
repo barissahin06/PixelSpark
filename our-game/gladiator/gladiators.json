@@ -28,5 +28,15 @@
     "starting_stamina": 6,
     "attack_damage": 40,
     "dodge_chance": 10
+  },
+  {
+    "id": "slave_base",
+    "display_name": "Slave",
+    "type": "Slave",
+    "level": 1,
+    "starting_health": 40,
+    "starting_stamina": 5,
+    "attack_damage": 5,
+    "dodge_chance": 2
   }
 ]
