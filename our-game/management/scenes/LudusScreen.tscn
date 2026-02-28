@@ -153,6 +153,17 @@ theme_override_font_sizes/font_size = 16
 text = "Train"
 flat = true
 
+[node name="UpgradesMenuButton" type="Button" parent="DoorActions"]
+layout_mode = 1
+offset_left = 638.0
+offset_top = 91.0
+offset_right = 738.0
+offset_bottom = 281.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 16
+text = "Upgrades"
+flat = true
+
 [node name="MarketModal" type="ColorRect" parent="." unique_id=616433077]
 visible = false
 layout_mode = 1
@@ -391,6 +402,7 @@ text = "Close"
 [connection signal="pressed" from="DoorActions/FeedMenuButton" to="." method="_on_feed_menu_pressed"]
 [connection signal="pressed" from="DoorActions/MarketplaceMenuButton" to="." method="_on_marketplace_menu_pressed"]
 [connection signal="pressed" from="DoorActions/TrainMenuButton" to="." method="_on_train_menu_pressed"]
+[connection signal="pressed" from="DoorActions/UpgradesMenuButton" to="." method="_on_upgrades_menu_pressed"]
 [connection signal="pressed" from="MarketModal/Panel/MarginContainer/VBox/BuyFoodButton" to="." method="_on_buy_food_button_pressed"]
 [connection signal="pressed" from="MarketModal/Panel/MarginContainer/VBox/SellFoodButton" to="." method="_on_sell_food_button_pressed"]
 [connection signal="pressed" from="MarketModal/Panel/MarginContainer/VBox/BuySlaveButton" to="." method="_on_buy_slave_button_pressed"]

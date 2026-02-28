@@ -1,6 +1,7 @@
 extends Node
 
 const ROUTES := {
+	"main_menu": "res://core/scenes/MainMenu.tscn",
 	"ludus": "res://management/scenes/LudusScreen.tscn",
 	"battle": "res://battle/scenes/BattleScreen.tscn"
 }
@@ -22,3 +23,6 @@ func go_to_ludus() -> void:
 
 func go_to_battle() -> void:
 	go_to("battle")
+
+func go_to_main_menu() -> void:
+	go_to("main_menu")

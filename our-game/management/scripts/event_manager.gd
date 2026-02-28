@@ -26,7 +26,7 @@ func try_trigger_event() -> bool:
 	if events.is_empty():
 		return false
 	
-	if randf() > 0.4:
+	if randf() > 0.15:
 		return false
 	
 	_pending_event = events[randi() % events.size()]
@@ -53,6 +53,7 @@ func resolve_choice(choice_key: String) -> String:
 	# Apply gold
 	if gold_change != 0:
 		GameManager.gold += gold_change
+		GameManager.gold = maxi(GameManager.gold, 0)
 		if gold_change > 0:
 			result += "+%d Gold. " % gold_change
 		else:
@@ -118,6 +119,33 @@ func resolve_choice(choice_key: String) -> String:
 				result += "%s took %d damage!" % [target.g_name, value]
 			else:
 				result += "No gladiators affected."
+		
+		"damage_all":
+			var targets = _get_active_gladiators()
+			for g in targets:
+				g.current_hp -= value
+				if g.current_hp <= 0:
+					g.current_hp = 0
+					g.is_active = false
+			result += "All gladiators took %d damage!" % value
+		
+		"heal_all":
+			for g in _get_active_gladiators():
+				g.current_hp = g.max_hp
+			result += "All gladiators fully healed!"
+		
+		"gamble":
+			if randf() < 0.5:
+				GameManager.gold += value
+				GameManager.gold = maxi(GameManager.gold, 0)
+				result += "Lady Fortuna smiles! You won %d Gold!" % value
+			else:
+				result += "The dice betray you! You lost your wager."
+		
+		"food_loss":
+			GameManager.food -= value
+			GameManager.food = maxi(GameManager.food, 0)
+			result += "Lost %d Food!" % value
 		
 		"none":
 			if result.is_empty():

@@ -117,5 +117,141 @@
       "effect": "none",
       "value": 0
     }
+  },
+  {
+    "id": 8,
+    "title": "Plague Outbreak",
+    "description": "A terrible plague sweeps through the slave quarters. Your gladiators are at risk.",
+    "choice_1": {
+      "text": "Buy medicine (-20 Gold, save everyone)",
+      "gold": -20,
+      "effect": "none",
+      "value": 0
+    },
+    "choice_2": {
+      "text": "Let it pass (all gladiators lose 15 HP)",
+      "gold": 0,
+      "effect": "damage_all",
+      "value": 15
+    }
+  },
+  {
+    "id": 9,
+    "title": "Gambling Den",
+    "description": "A gambler challenges you. 'Double or nothing, lanista!'",
+    "choice_1": {
+      "text": "Gamble 20 Gold (50% chance: +40 or lose it)",
+      "gold": -20,
+      "effect": "gamble",
+      "value": 40
+    },
+    "choice_2": {
+      "text": "Walk away (No effect)",
+      "gold": 0,
+      "effect": "none",
+      "value": 0
+    }
+  },
+  {
+    "id": 10,
+    "title": "Noble's Banquet",
+    "description": "A Roman noble invites you to a grand feast. He may offer patronage.",
+    "choice_1": {
+      "text": "Attend the feast (+20 Gold, +15 Food)",
+      "gold": 20,
+      "effect": "food_boost",
+      "value": 15
+    },
+    "choice_2": {
+      "text": "Send a gladiator as entertainment (+40 Gold, gladiator loses 10 HP)",
+      "gold": 40,
+      "effect": "random_damage",
+      "value": 10
+    }
+  },
+  {
+    "id": 11,
+    "title": "Gladiator Revolt",
+    "description": "Tensions rise in the barracks. Your gladiators demand better conditions!",
+    "choice_1": {
+      "text": "Improve conditions (-15 Gold, heal all gladiators)",
+      "gold": -15,
+      "effect": "heal_all",
+      "value": 0
+    },
+    "choice_2": {
+      "text": "Crack down (random gladiator loses 25 HP, +10 Gold)",
+      "gold": 10,
+      "effect": "random_damage",
+      "value": 25
+    }
+  },
+  {
+    "id": 12,
+    "title": "Weapon Shipment",
+    "description": "A weapons dealer arrives with fine gladius swords and tridents.",
+    "choice_1": {
+      "text": "Buy weapons (-25 Gold, +3 Atk to all)",
+      "gold": -25,
+      "effect": "attack_boost_all",
+      "value": 3
+    },
+    "choice_2": {
+      "text": "Too expensive (No effect)",
+      "gold": 0,
+      "effect": "none",
+      "value": 0
+    }
+  },
+  {
+    "id": 13,
+    "title": "Drought Season",
+    "description": "A drought hits the region. Food prices have doubled!",
+    "choice_1": {
+      "text": "Stock up before prices rise (-15 Gold, +30 Food)",
+      "gold": -15,
+      "effect": "food_boost",
+      "value": 30
+    },
+    "choice_2": {
+      "text": "Wait it out (lose 20 Food)",
+      "gold": 0,
+      "effect": "food_loss",
+      "value": 20
+    }
+  },
+  {
+    "id": 14,
+    "title": "Crowd Favorite",
+    "description": "The crowd chants for your strongest gladiator! His fame spreads across Rome.",
+    "choice_1": {
+      "text": "Capitalize on fame (+25 Gold)",
+      "gold": 25,
+      "effect": "none",
+      "value": 0
+    },
+    "choice_2": {
+      "text": "Use fame for training (+3 Atk to random gladiator)",
+      "gold": 0,
+      "effect": "attack_boost",
+      "value": 3
+    }
+  },
+  {
+    "id": 15,
+    "title": "Rival Ludus Raid",
+    "description": "A rival ludus sends thugs to sabotage your training grounds!",
+    "choice_1": {
+      "text": "Hire guards (-20 Gold, prevent damage)",
+      "gold": -20,
+      "effect": "none",
+      "value": 0
+    },
+    "choice_2": {
+      "text": "Fight back (random gladiator loses 15 HP, +15 Gold looted)",
+      "gold": 15,
+      "effect": "random_damage",
+      "value": 15
+    }
   }
 ]
