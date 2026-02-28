@@ -3,7 +3,15 @@
     "id": 1,
     "title": "Karaborsa Satıcısı",
     "description": "Gizemli biri sana güç iksiri satmak istiyor.",
-    "choice_1": {"text": "Satın Al (-20 Gold, +2 Str)", "gold": -20, "str": 2},
-    "choice_2": {"text": "Kov gitsin (Etki yok)", "gold": 0, "str": 0}
+    "choice_1": {
+      "text": "Satın Al (-20 Gold, +2 Atk)",
+      "gold": -20,
+      "attack_damage": 2
+    },
+    "choice_2": {
+      "text": "Kov gitsin (Etki yok)",
+      "gold": 0,
+      "attack_damage": 0
+    }
   }
 ]
