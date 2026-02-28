@@ -1,14 +1,32 @@
 [
   {
-    "id": "glad_recruit_01",
-    "display_name": "Recruit I",
-    "starting_health": 30,
-    "starting_stamina": 3
+    "id": "tank_base",
+    "display_name": "Tank",
+    "type": "Tank",
+    "level": 1,
+    "starting_health": 100,
+    "starting_stamina": 10,
+    "attack_damage": 10,
+    "dodge_chance": 5
   },
   {
-    "id": "glad_recruit_02",
-    "display_name": "Recruit II",
-    "starting_health": 28,
-    "starting_stamina": 4
+    "id": "fighter_base",
+    "display_name": "Fighter",
+    "type": "Fighter",
+    "level": 1,
+    "starting_health": 80,
+    "starting_stamina": 8,
+    "attack_damage": 25,
+    "dodge_chance": 8
+  },
+  {
+    "id": "assassin_base",
+    "display_name": "Assassin",
+    "type": "Assassin",
+    "level": 1,
+    "starting_health": 60,
+    "starting_stamina": 6,
+    "attack_damage": 40,
+    "dodge_chance": 10
   }
 ]
