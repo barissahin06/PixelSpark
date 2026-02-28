@@ -1,33 +1,36 @@
 [
   {
     "id": "tank_base",
-    "display_name": "Tank",
-    "type": "Tank",
+    "display_name": "Murmillo",
+    "type": "Murmillo",
     "level": 1,
     "starting_health": 100,
     "starting_stamina": 10,
     "attack_damage": 10,
-    "dodge_chance": 5
+    "dodge_chance": 5,
+    "possible_traits": ["iron_skin", "shield_master", "glutton"]
   },
   {
     "id": "fighter_base",
-    "display_name": "Fighter",
-    "type": "Fighter",
+    "display_name": "Thraex",
+    "type": "Thraex",
     "level": 1,
     "starting_health": 80,
     "starting_stamina": 8,
     "attack_damage": 25,
-    "dodge_chance": 8
+    "dodge_chance": 8,
+    "possible_traits": ["berserker", "fast_learner", "battle_hardened"]
   },
   {
     "id": "assassin_base",
-    "display_name": "Assassin",
-    "type": "Assassin",
+    "display_name": "Retiarius",
+    "type": "Retiarius",
     "level": 1,
     "starting_health": 60,
     "starting_stamina": 6,
     "attack_damage": 40,
-    "dodge_chance": 10
+    "dodge_chance": 10,
+    "possible_traits": ["shadow_step", "fast_learner", "poisoner"]
   },
   {
     "id": "slave_base",
@@ -37,6 +40,7 @@
     "starting_health": 40,
     "starting_stamina": 5,
     "attack_damage": 5,
-    "dodge_chance": 2
+    "dodge_chance": 2,
+    "possible_traits": ["resilient", "glutton", "frail"]
   }
 ]

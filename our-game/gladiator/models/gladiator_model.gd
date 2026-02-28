@@ -9,6 +9,7 @@ var starting_health: int = 0
 var starting_stamina: int = 0
 var attack_damage: int = 0
 var dodge_chance: float = 0.0
+var possible_traits: Array = []
 
 static func from_dict(data: Dictionary) -> GladiatorModel:
 	var model := GladiatorModel.new()
@@ -20,4 +21,6 @@ static func from_dict(data: Dictionary) -> GladiatorModel:
 	model.starting_stamina = int(data.get("starting_stamina", 0))
 	model.attack_damage = int(data.get("attack_damage", 0))
 	model.dodge_chance = float(data.get("dodge_chance", 0.0))
+	model.possible_traits = data.get("possible_traits", [])
 	return model
+

@@ -3,9 +3,11 @@ extends RefCounted
 
 var initial_route: String = "ludus"
 var version: String = "0.0.0"
+var servers: Dictionary = {}
 
 static func from_dict(data: Dictionary) -> GameConfigModel:
 	var model := GameConfigModel.new()
 	model.initial_route = str(data.get("initial_route", "ludus"))
 	model.version = str(data.get("version", "0.0.0"))
+	model.servers = data.get("servers", {}) as Dictionary
 	return model

@@ -53,6 +53,9 @@ func add_gladiator(gladiator_id: String):
 	new_glad.dodge_chance = model.dodge_chance
 	
 	roster.append(new_glad)
+	
+	# Assign a random trait from the gladiator's possible traits
+	TraitSystem.assign_random_trait(new_glad, model.possible_traits)
 
 func pass_day():
 	current_day += 1
@@ -142,7 +145,9 @@ func train_gladiator(index: int, target: String) -> bool:
 				
 			if gold >= cost:
 				gold -= cost
-				glad.start_training(3, target) # 3 gün sürer
+				var duration = 3 - TraitSystem.get_training_speed_bonus(glad)
+				duration = maxi(duration, 1)  # Minimum 1 day
+				glad.start_training(duration, target)
 				return true
 	return false
 
