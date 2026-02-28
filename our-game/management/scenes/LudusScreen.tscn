@@ -22,17 +22,25 @@ grow_vertical = 2
 texture = ExtResource("2_e4gdd")
 metadata/_edit_use_anchors_ = true
 
+
+
+[node name="GladiatorYard" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
 [node name="MarginContainer" type="MarginContainer" parent="." unique_id=876331981]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 14.0
-offset_top = -22.0
-offset_right = 14.0
-offset_bottom = -22.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 theme_override_constants/margin_left = 24
 theme_override_constants/margin_top = 24
 theme_override_constants/margin_right = 24
@@ -42,6 +50,7 @@ theme_override_constants/margin_bottom = 24
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+mouse_filter = 2
 theme_override_constants/separation = 12
 
 [node name="TopBar" type="HBoxContainer" parent="MarginContainer/VBoxContainer" unique_id=1661049850]
@@ -73,19 +82,17 @@ text = "Day: 1"
 
 [node name="HSeparator" type="HSeparator" parent="MarginContainer/VBoxContainer" unique_id=1169386060]
 layout_mode = 2
+modulate = Color(1, 1, 1, 0)
 
 [node name="MainContent" type="VBoxContainer" parent="MarginContainer/VBoxContainer" unique_id=792825976]
 layout_mode = 2
 size_flags_vertical = 3
+mouse_filter = 2
 theme_override_constants/separation = 24
-
-[node name="RosterList" type="HBoxContainer" parent="MarginContainer/VBoxContainer/MainContent" unique_id=244113831]
-layout_mode = 2
-size_flags_vertical = 3
-alignment = 1
 
 [node name="HSeparator2" type="HSeparator" parent="MarginContainer/VBoxContainer" unique_id=357358843]
 layout_mode = 2
+modulate = Color(1, 1, 1, 0)
 
 [node name="BottomActions" type="HBoxContainer" parent="MarginContainer/VBoxContainer" unique_id=1484511758]
 layout_mode = 2
@@ -104,52 +111,47 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 20
 text = "Go To Battle"
 
-[node name="DetailsPanel" type="VBoxContainer" parent="." unique_id=1801975999]
-visible = false
-layout_mode = 0
-offset_right = 250.0
-offset_bottom = 150.0
-size_flags_horizontal = 3
-theme_override_constants/separation = 10
-alignment = 1
+[node name="DoorActions" type="Control" parent="." unique_id=12345]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
 
-[node name="StatsLabel" type="Label" parent="DetailsPanel" unique_id=1498742922]
-layout_mode = 2
-text = "Select a gladiator to view stats."
-horizontal_alignment = 1
-autowrap_mode = 2
+[node name="FeedMenuButton" type="Button" parent="DoorActions" unique_id=12347]
+layout_mode = 1
+offset_left = 58.0
+offset_top = 95.0
+offset_right = 158.0
+offset_bottom = 285.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 16
+text = "Kitchen"
+flat = true
 
-[node name="ActionsContainer" type="HBoxContainer" parent="DetailsPanel" unique_id=1069703233]
-layout_mode = 2
-theme_override_constants/separation = 12
-alignment = 1
+[node name="MarketplaceMenuButton" type="Button" parent="DoorActions" unique_id=12346]
+layout_mode = 1
+offset_left = 189.0
+offset_top = 81.0
+offset_right = 314.0
+offset_bottom = 301.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 16
+text = "Marketplace"
+flat = true
 
-[node name="HealButton" type="Button" parent="DetailsPanel/ActionsContainer" unique_id=928809272]
-layout_mode = 2
-text = "Heal Buff (-5 Gold)"
-
-[node name="CloseDetailsButton" type="Button" parent="DetailsPanel/ActionsContainer" unique_id=1134421188]
-layout_mode = 2
-theme_override_colors/font_color = Color(1, 0.3, 0.3, 1)
-text = "X"
-
-[node name="UpgradeContainer" type="HBoxContainer" parent="DetailsPanel" unique_id=1712909604]
-visible = false
-layout_mode = 2
-theme_override_constants/separation = 12
-alignment = 1
-
-[node name="UpgradeTankButton" type="Button" parent="DetailsPanel/UpgradeContainer" unique_id=597439271]
-layout_mode = 2
-text = "To Tank (-10G)"
-
-[node name="UpgradeFighterButton" type="Button" parent="DetailsPanel/UpgradeContainer" unique_id=411621067]
-layout_mode = 2
-text = "To Fighter (-10G)"
-
-[node name="UpgradeAssassinButton" type="Button" parent="DetailsPanel/UpgradeContainer" unique_id=1047586129]
-layout_mode = 2
-text = "To Assassin (-10G)"
+[node name="TrainMenuButton" type="Button" parent="DoorActions" unique_id=12348]
+layout_mode = 1
+offset_left = 508.0
+offset_top = 91.0
+offset_right = 608.0
+offset_bottom = 281.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 16
+text = "Train"
+flat = true
 
 [node name="MarketModal" type="ColorRect" parent="." unique_id=616433077]
 visible = false
@@ -169,9 +171,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -150.0
-offset_top = -100.0
+offset_top = -120.0
 offset_right = 150.0
-offset_bottom = 100.0
+offset_bottom = 120.0
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -225,10 +227,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -117.0
-offset_top = -140.5
-offset_right = 117.0
-offset_bottom = 140.5
+offset_left = -140.0
+offset_top = -150.0
+offset_right = 140.0
+offset_bottom = 150.0
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -269,54 +271,14 @@ text = "Buff All Stats (-35 Gold)"
 layout_mode = 2
 text = "Close"
 
-[node name="DoorActions" type="Control" parent="." unique_id=12345]
+[node name="ActionModals" type="Control" parent="." unique_id=12349]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 4.0
-offset_top = -8.0
-offset_right = 4.0
-offset_bottom = -8.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-
-[node name="FeedMenuButton" type="Button" parent="DoorActions" unique_id=12347]
-layout_mode = 1
-offset_left = 58.0
-offset_top = 95.0
-offset_right = 158.0
-offset_bottom = 285.0
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_font_sizes/font_size = 16
-text = "Kitchen"
-flat = true
-
-[node name="MarketplaceMenuButton" type="Button" parent="DoorActions" unique_id=12346]
-layout_mode = 1
-offset_left = 189.0
-offset_top = 81.0
-offset_right = 314.0
-offset_bottom = 301.0
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_font_sizes/font_size = 16
-text = "Marketplace"
-flat = true
-
-[node name="TrainMenuButton" type="Button" parent="DoorActions" unique_id=12348]
-layout_mode = 1
-offset_left = 508.0
-offset_top = 91.0
-offset_right = 608.0
-offset_bottom = 281.0
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_font_sizes/font_size = 16
-text = "Train"
-flat = true
-
-[node name="ActionModals" type="Control" parent="." unique_id=12349]
-anchors_preset = 0
 
 [node name="FeedModal" type="ColorRect" parent="ActionModals" unique_id=12350]
 visible = false
@@ -335,10 +297,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -150.0
-offset_top = -100.0
-offset_right = 150.0
-offset_bottom = 100.0
+offset_left = -250.0
+offset_top = -175.0
+offset_right = 250.0
+offset_bottom = 175.0
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -388,10 +350,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -150.0
-offset_top = -100.0
-offset_right = 150.0
-offset_bottom = 100.0
+offset_left = -250.0
+offset_top = -175.0
+offset_right = 250.0
+offset_bottom = 175.0
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -426,11 +388,9 @@ text = "Close"
 
 [connection signal="pressed" from="MarginContainer/VBoxContainer/BottomActions/NextDayButton" to="." method="_on_next_day_button_pressed"]
 [connection signal="pressed" from="MarginContainer/VBoxContainer/BottomActions/ToBattleButton" to="." method="_on_to_battle_button_pressed"]
-[connection signal="pressed" from="DetailsPanel/ActionsContainer/HealButton" to="." method="_on_heal_button_pressed"]
-[connection signal="pressed" from="DetailsPanel/ActionsContainer/CloseDetailsButton" to="." method="_on_close_details_pressed"]
-[connection signal="pressed" from="DetailsPanel/UpgradeContainer/UpgradeTankButton" to="." method="_on_upgrade_tank_pressed"]
-[connection signal="pressed" from="DetailsPanel/UpgradeContainer/UpgradeFighterButton" to="." method="_on_upgrade_fighter_pressed"]
-[connection signal="pressed" from="DetailsPanel/UpgradeContainer/UpgradeAssassinButton" to="." method="_on_upgrade_assassin_pressed"]
+[connection signal="pressed" from="DoorActions/FeedMenuButton" to="." method="_on_feed_menu_pressed"]
+[connection signal="pressed" from="DoorActions/MarketplaceMenuButton" to="." method="_on_marketplace_menu_pressed"]
+[connection signal="pressed" from="DoorActions/TrainMenuButton" to="." method="_on_train_menu_pressed"]
 [connection signal="pressed" from="MarketModal/Panel/MarginContainer/VBox/BuyFoodButton" to="." method="_on_buy_food_button_pressed"]
 [connection signal="pressed" from="MarketModal/Panel/MarginContainer/VBox/SellFoodButton" to="." method="_on_sell_food_button_pressed"]
 [connection signal="pressed" from="MarketModal/Panel/MarginContainer/VBox/BuySlaveButton" to="." method="_on_buy_slave_button_pressed"]
@@ -440,8 +400,5 @@ text = "Close"
 [connection signal="pressed" from="TrainModal/Panel/MarginContainer/VBox/TrainDodgeButton" to="." method="_on_train_dodge_pressed"]
 [connection signal="pressed" from="TrainModal/Panel/MarginContainer/VBox/TrainAllButton" to="." method="_on_train_all_pressed"]
 [connection signal="pressed" from="TrainModal/Panel/MarginContainer/VBox/CloseTrainButton" to="." method="_on_close_train_button_pressed"]
-[connection signal="pressed" from="DoorActions/FeedMenuButton" to="." method="_on_feed_menu_pressed"]
-[connection signal="pressed" from="DoorActions/MarketplaceMenuButton" to="." method="_on_marketplace_menu_pressed"]
-[connection signal="pressed" from="DoorActions/TrainMenuButton" to="." method="_on_train_menu_pressed"]
 [connection signal="pressed" from="ActionModals/FeedModal/Panel/MarginContainer/VBox/CloseFeedButton" to="." method="_on_close_feed_pressed"]
 [connection signal="pressed" from="ActionModals/TrainListModal/Panel/MarginContainer/VBox/CloseTrainListButton" to="." method="_on_close_train_list_pressed"]

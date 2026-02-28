@@ -1,14 +1,110 @@
 [
   {
     "id": "card_strike",
-    "display_name": "Strike",
+    "card_name": "Strike",
     "cost": 1,
+    "attack_power": 8,
+    "health": 0,
+    "description": "Deal base damage to the enemy.",
     "tags": ["attack", "basic"]
   },
   {
+    "id": "card_heavy_strike",
+    "card_name": "Heavy Strike",
+    "cost": 2,
+    "attack_power": 14,
+    "health": 0,
+    "description": "A powerful overhead blow.",
+    "tags": ["attack"]
+  },
+  {
     "id": "card_guard",
-    "display_name": "Guard",
+    "card_name": "Guard",
     "cost": 1,
+    "attack_power": 0,
+    "health": 6,
+    "description": "Raise your guard and block damage.",
     "tags": ["defense", "basic"]
+  },
+  {
+    "id": "card_shield_wall",
+    "card_name": "Shield Wall",
+    "cost": 2,
+    "attack_power": 0,
+    "health": 12,
+    "description": "Brace behind your shield.",
+    "tags": ["defense"]
+  },
+  {
+    "id": "card_slash",
+    "card_name": "Slash",
+    "cost": 1,
+    "attack_power": 5,
+    "health": 0,
+    "description": "A quick slash.",
+    "tags": ["attack", "basic"]
+  },
+  {
+    "id": "card_rally",
+    "card_name": "Rally",
+    "cost": 0,
+    "attack_power": 0,
+    "health": 0,
+    "description": "Draw 1 extra card.",
+    "tags": ["utility"]
+  },
+  {
+    "id": "card_counter",
+    "card_name": "Counter",
+    "cost": 1,
+    "attack_power": 4,
+    "health": 4,
+    "description": "Strike and defend in one motion.",
+    "tags": ["attack", "defense"]
+  },
+  {
+    "id": "card_execute",
+    "card_name": "Execute",
+    "cost": 3,
+    "attack_power": 22,
+    "health": 0,
+    "description": "A devastating finishing blow.",
+    "tags": ["attack"]
+  },
+  {
+    "id": "card_shield_bash",
+    "card_name": "Shield Bash",
+    "cost": 1,
+    "attack_power": 4,
+    "health": 8,
+    "description": "Bash with your shield — hit and block.",
+    "tags": ["attack", "defense", "murmillo"]
+  },
+  {
+    "id": "card_net_toss",
+    "card_name": "Net Toss",
+    "cost": 1,
+    "attack_power": 3,
+    "health": 0,
+    "description": "Entangle the enemy, weakening next attack.",
+    "tags": ["attack", "debuff", "retiarius"]
+  },
+  {
+    "id": "card_sica_slash",
+    "card_name": "Sica Slash",
+    "cost": 1,
+    "attack_power": 12,
+    "health": 0,
+    "description": "The curved blade finds gaps in armor.",
+    "tags": ["attack", "pierce", "thraex"]
+  },
+  {
+    "id": "card_crowd_roar",
+    "card_name": "Crowd Roar",
+    "cost": 0,
+    "attack_power": 0,
+    "health": 0,
+    "description": "The crowd fuels your rage! +1 energy.",
+    "tags": ["utility", "energy"]
   }
 ]

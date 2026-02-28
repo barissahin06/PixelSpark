@@ -1,17 +1,121 @@
 [
   {
-    "id": 1,
-    "title": "Karaborsa Satıcısı",
-    "description": "Gizemli biri sana güç iksiri satmak istiyor.",
-    "choice_1": {
-      "text": "Satın Al (-20 Gold, +2 Atk)",
-      "gold": -20,
-      "attack_damage": 2
-    },
-    "choice_2": {
-      "text": "Kov gitsin (Etki yok)",
-      "gold": 0,
-      "attack_damage": 0
-    }
+	"id": 1,
+	"title": "Black Market Dealer",
+	"description": "A mysterious figure offers you a power potion.",
+	"choice_1": {
+	  "text": "Buy it (-20 Gold, +2 Atk to random gladiator)",
+	  "gold": -20,
+	  "effect": "attack_boost",
+	  "value": 2
+	},
+	"choice_2": {
+	  "text": "Send him away (No effect)",
+	  "gold": 0,
+	  "effect": "none",
+	  "value": 0
+	}
+  },
+  {
+	"id": 2,
+	"title": "Traveling Healer",
+	"description": "A wandering healer offers his services to your ludus.",
+	"choice_1": {
+	  "text": "Hire him (-15 Gold, fully heal one gladiator)",
+	  "gold": -15,
+	  "effect": "heal_one",
+	  "value": 0
+	},
+	"choice_2": {
+	  "text": "Decline (No effect)",
+	  "gold": 0,
+	  "effect": "none",
+	  "value": 0
+	}
+  },
+  {
+	"id": 3,
+	"title": "Food Caravan",
+	"description": "A merchant caravan passes through with surplus supplies.",
+	"choice_1": {
+	  "text": "Trade gold for food (-10 Gold, +40 Food)",
+	  "gold": -10,
+	  "effect": "food_boost",
+	  "value": 40
+	},
+	"choice_2": {
+	  "text": "Rob the caravan (+30 Food, risk gladiator injury)",
+	  "gold": 0,
+	  "effect": "risky_food",
+	  "value": 30
+	}
+  },
+  {
+	"id": 4,
+	"title": "Arena Sponsor",
+	"description": "A wealthy senator wants to sponsor your next fight.",
+	"choice_1": {
+	  "text": "Accept sponsorship (+30 Gold)",
+	  "gold": 30,
+	  "effect": "none",
+	  "value": 0
+	},
+	"choice_2": {
+	  "text": "Decline (keep your independence)",
+	  "gold": 0,
+	  "effect": "none",
+	  "value": 0
+	}
+  },
+  {
+	"id": 5,
+	"title": "Escaped Slave",
+	"description": "A runaway slave begs for shelter at your ludus.",
+	"choice_1": {
+	  "text": "Take him in (free Slave added to roster)",
+	  "gold": 0,
+	  "effect": "free_slave",
+	  "value": 0
+	},
+	"choice_2": {
+	  "text": "Turn him away (No effect)",
+	  "gold": 0,
+	  "effect": "none",
+	  "value": 0
+	}
+  },
+  {
+	"id": 6,
+	"title": "Training Grounds Fire",
+	"description": "A fire breaks out in the training area!",
+	"choice_1": {
+	  "text": "Pay for repairs (-25 Gold)",
+	  "gold": -25,
+	  "effect": "none",
+	  "value": 0
+	},
+	"choice_2": {
+	  "text": "Let it burn (random gladiator loses 20 HP)",
+	  "gold": 0,
+	  "effect": "random_damage",
+	  "value": 20
+	}
+  },
+  {
+	"id": 7,
+	"title": "Veteran Trainer",
+	"description": "An old gladiator master offers to train your fighters.",
+	"choice_1": {
+	  "text": "Hire him (-30 Gold, +5 Atk to all gladiators)",
+	  "gold": -30,
+	  "effect": "attack_boost_all",
+	  "value": 5
+	},
+	"choice_2": {
+	  "text": "Decline (No effect)",
+	  "gold": 0,
+	  "effect": "none",
+	  "value": 0
+	}
   }
 ]

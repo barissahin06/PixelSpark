@@ -1,4 +1,13 @@
 {
   "initial_route": "ludus",
-  "version": "0.1.0-mvp-skeleton"
+  "version": "0.1.0-mvp-skeleton",
+  "servers": {
+    "pixellab": {
+      "url": "https://api.pixellab.ai/mcp",
+      "type": "http",
+      "headers": {
+        "Authorization": "Bearer 5c2da6df-914a-4f17-b39b-cb42508ae5f6"
+      }
+    }
+  }
 }
