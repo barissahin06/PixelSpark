@@ -223,27 +223,56 @@ func end_player_turn() -> void:
 func _execute_enemy_turn() -> void:
 	enemy_block = 0  # Reset enemy block
 	
-	# Simple AI: attack with base damage (minus debuffs)
-	var base_damage = enemy_attack + randi_range(-3, 3)
-	base_damage -= enemy_attack_debuff
-	base_damage = maxi(base_damage, 1)
-	enemy_attack_debuff = 0  # Debuff wears off
+	# --- Smart Enemy AI ---
+	var hp_pct = float(enemy_hp) / float(enemy_max_hp) if enemy_max_hp > 0 else 1.0
+	var roll = randf()
 	
-	# Check player dodge
-	if randf() * 100.0 < player_gladiator.dodge_chance:
-		damage_dealt.emit("player", 0, 0)  # Dodged
-		animation_requested.emit("dodge", "player")
-	else:
-		# Apply trait damage reduction (e.g. iron_skin)
-		var reduction = TraitSystem.get_damage_reduction(player_gladiator)
-		var reduced_damage = int(base_damage * reduction)
+	# Decision: Block, Power Attack, or Normal Attack
+	var action = "attack"
+	if hp_pct < 0.3 and roll < 0.4:
+		action = "block"  # Low HP: 40% chance to block
+	elif player_block > 10 and roll < 0.35:
+		action = "power_attack"  # Player has block: 35% power attack
+	elif roll < 0.15:
+		action = "double_strike"  # 15% chance: two weaker hits
+	
+	enemy_attack_debuff = maxi(enemy_attack_debuff, 0)
+	
+	match action:
+		"block":
+			# Enemy gains block and does a light attack
+			enemy_block += int(enemy_attack * 0.8)
+			var light_dmg = int(enemy_attack * 0.4) + randi_range(-2, 2)
+			light_dmg -= enemy_attack_debuff
+			light_dmg = maxi(light_dmg, 1)
+			enemy_attack_debuff = 0
+			_apply_enemy_hit(light_dmg)
 		
-		var blocked = mini(player_block, reduced_damage)
-		player_block -= blocked
-		var actual = reduced_damage - blocked
-		player_gladiator.current_hp -= actual
-		damage_dealt.emit("player", actual, blocked)
-		animation_requested.emit("hit", "player")
+		"power_attack":
+			# 1.5x damage, ignores 50% of player block
+			var power_dmg = int(enemy_attack * 1.5) + randi_range(-2, 3)
+			power_dmg -= enemy_attack_debuff
+			power_dmg = maxi(power_dmg, 2)
+			enemy_attack_debuff = 0
+			player_block = int(player_block * 0.5)  # Shatter half the block
+			_apply_enemy_hit(power_dmg)
+		
+		"double_strike":
+			# Two hits at 60% damage each
+			var hit_dmg = int(enemy_attack * 0.6) + randi_range(-1, 2)
+			hit_dmg -= enemy_attack_debuff
+			hit_dmg = maxi(hit_dmg, 1)
+			enemy_attack_debuff = 0
+			_apply_enemy_hit(hit_dmg)
+			if battle_active and player_gladiator.current_hp > 0:
+				_apply_enemy_hit(hit_dmg)
+		
+		_:  # Normal attack
+			var base_damage = enemy_attack + randi_range(-2, 3)
+			base_damage -= enemy_attack_debuff
+			base_damage = maxi(base_damage, 1)
+			enemy_attack_debuff = 0
+			_apply_enemy_hit(base_damage)
 	
 	# Check lose
 	if player_gladiator.current_hp <= 0:
@@ -254,6 +283,25 @@ func _execute_enemy_turn() -> void:
 	
 	# Back to player
 	_start_player_turn()
+
+func _apply_enemy_hit(damage: int) -> void:
+	## Applies a single enemy hit to the player, respecting dodge, traits, and block.
+	if randf() * 100.0 < player_gladiator.dodge_chance:
+		damage_dealt.emit("player", 0, 0)
+		animation_requested.emit("dodge", "player")
+		return
+	
+	# Apply trait damage reduction (e.g. iron_skin)
+	var reduction = TraitSystem.get_damage_reduction(player_gladiator)
+	var reduced_damage = int(damage * (1.0 - reduction))
+	reduced_damage = maxi(reduced_damage, 1)
+	
+	var blocked = mini(player_block, reduced_damage)
+	player_block -= blocked
+	var actual = reduced_damage - blocked
+	player_gladiator.current_hp -= actual
+	damage_dealt.emit("player", actual, blocked)
+	animation_requested.emit("hit", "player")
 
 func _end_battle(player_won: bool) -> void:
 	battle_active = false
