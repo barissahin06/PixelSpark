@@ -1,19 +1,20 @@
 extends Control
 
-@onready var gladiators_container: Control = get_node_or_null("MarginContainer/VBoxContainer/MainContent/RosterPanel/VBoxContainer/RosterList")
-@onready var stats_label: Label = $MarginContainer/VBoxContainer/MainContent/DetailsPanel/VBoxContainer/StatsLabel
-@onready var actions_container: HBoxContainer = $MarginContainer/VBoxContainer/MainContent/DetailsPanel/VBoxContainer/ActionsContainer
-@onready var upgrade_container: HBoxContainer = $MarginContainer/VBoxContainer/MainContent/DetailsPanel/VBoxContainer/UpgradeContainer
-@onready var heal_button: Button = $MarginContainer/VBoxContainer/MainContent/DetailsPanel/VBoxContainer/ActionsContainer/HealButton
+@onready var gladiators_container: Control = get_node_or_null("MarginContainer/VBoxContainer/MainContent/RosterList")
+@onready var details_panel: VBoxContainer = $DetailsPanel
+@onready var stats_label: Label = $DetailsPanel/StatsLabel
+@onready var actions_container: HBoxContainer = $DetailsPanel/ActionsContainer
+@onready var upgrade_container: HBoxContainer = $DetailsPanel/UpgradeContainer
+@onready var heal_button: Button = $DetailsPanel/ActionsContainer/HealButton
 @onready var market_modal: ColorRect = $MarketModal
 @onready var train_modal: ColorRect = $TrainModal
 @onready var next_day_button: Button = $MarginContainer/VBoxContainer/BottomActions/NextDayButton
 @onready var to_battle_button: Button = $MarginContainer/VBoxContainer/BottomActions/ToBattleButton
 
-@onready var feed_modal: ColorRect = get_node_or_null("ActionModals/FeedModal")
-@onready var feed_list: VBoxContainer = get_node_or_null("ActionModals/FeedModal/Panel/MarginContainer/VBox/ScrollContainer/FeedList")
-@onready var train_list_modal: ColorRect = get_node_or_null("ActionModals/TrainListModal")
-@onready var train_list: VBoxContainer = get_node_or_null("ActionModals/TrainListModal/Panel/MarginContainer/VBox/ScrollContainer/TrainList")
+@onready var feed_modal: ColorRect = $ActionModals/FeedModal
+@onready var feed_list: VBoxContainer = $ActionModals/FeedModal/Panel/MarginContainer/VBox/ScrollContainer/FeedList
+@onready var train_list_modal: ColorRect = $ActionModals/TrainListModal
+@onready var train_list: VBoxContainer = $ActionModals/TrainListModal/Panel/MarginContainer/VBox/ScrollContainer/TrainList
 
 # Load Image
 @onready var murmillo_tex = load("res://assets/ui/murmillo_base.png")
@@ -22,12 +23,13 @@ var selected_gladiator: Gladiator = null
 var selected_index: int = -1
 
 func _ready() -> void:
+	details_panel.visible = false
 	actions_container.hide()
 	upgrade_container.hide()
 	market_modal.visible = false
 	train_modal.visible = false
-	if feed_modal: feed_modal.visible = false
-	if train_list_modal: train_list_modal.visible = false
+	feed_modal.visible = false
+	train_list_modal.visible = false
 	_update_top_bar()
 	_populate_roster()
 
@@ -68,7 +70,7 @@ func _populate_roster() -> void:
 			btn.texture_normal = murmillo_tex
 			btn.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
 			btn.custom_minimum_size = Vector2(80, 80)
-			btn.pressed.connect(self._on_gladiator_selected.bind(i))
+			btn.pressed.connect(self._on_gladiator_selected.bind(i, btn))
 			
 			var lbl = Label.new()
 			lbl.text = "%s (Lv. %d)" % [gladiator.g_name, gladiator.level]
@@ -79,16 +81,21 @@ func _populate_roster() -> void:
 			vbox.add_child(lbl)
 			gladiators_container.add_child(vbox)
 
-func _on_gladiator_selected(index: int) -> void:
+func _on_gladiator_selected(index: int, btn_node: TextureButton = null) -> void:
 	selected_index = index
 	selected_gladiator = GameManager.roster[index]
 	_update_stats_panel()
+	details_panel.visible = true
+	if btn_node:
+		# Position panel centered above the character
+		details_panel.global_position = btn_node.global_position + Vector2(btn_node.size.x / 2.0 - details_panel.size.x / 2.0, -220)
 
 func _update_stats_panel() -> void:
 	if not selected_gladiator:
 		stats_label.text = "Select a gladiator to view stats."
 		actions_container.hide()
 		upgrade_container.hide()
+		details_panel.visible = false
 		return
 		
 	if selected_gladiator.type == "Slave":
@@ -113,6 +120,11 @@ func _update_stats_panel() -> void:
 		stats_text += " (%d days left)" % selected_gladiator.action_duration_left
 	
 	stats_label.text = stats_text
+
+func _on_close_details_pressed() -> void:
+	details_panel.visible = false
+	selected_index = -1
+	selected_gladiator = null
 
 # ================= Actions =================
 
@@ -230,6 +242,7 @@ func _on_next_day_button_pressed() -> void:
 	# Günü geçtikten sonra gladyatörler ölmüş/silinmiş olabileceğinden seçimi sıfırla
 	selected_index = -1
 	selected_gladiator = null
+	details_panel.visible = false
 	
 	_update_top_bar()
 	_populate_roster() # Listeyi baştan çiz (biri öldüyse arayüzden de kalkar)

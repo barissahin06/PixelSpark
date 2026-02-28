@@ -27,6 +27,10 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_left = 14.0
+offset_top = -22.0
+offset_right = 14.0
+offset_bottom = -22.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/margin_left = 24
@@ -70,82 +74,15 @@ text = "Day: 1"
 [node name="HSeparator" type="HSeparator" parent="MarginContainer/VBoxContainer" unique_id=1169386060]
 layout_mode = 2
 
-[node name="MainContent" type="HBoxContainer" parent="MarginContainer/VBoxContainer" unique_id="792825976"]
+[node name="MainContent" type="VBoxContainer" parent="MarginContainer/VBoxContainer" unique_id=792825976]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/separation = 24
 
-[node name="RosterPanel" type="PanelContainer" parent="MarginContainer/VBoxContainer/MainContent" unique_id=245699302]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/MainContent/RosterPanel" unique_id=1319022340]
-layout_mode = 2
-theme_override_constants/separation = 10
-
-[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/MainContent/RosterPanel/VBoxContainer" unique_id=386484871]
-layout_mode = 2
-theme_override_font_sizes/font_size = 18
-text = "Your Gladiators"
-horizontal_alignment = 1
-
-[node name="RosterList" type="VBoxContainer" parent="MarginContainer/VBoxContainer/MainContent/RosterPanel/VBoxContainer" unique_id=244113831]
+[node name="RosterList" type="HBoxContainer" parent="MarginContainer/VBoxContainer/MainContent" unique_id=244113831]
 layout_mode = 2
 size_flags_vertical = 3
-
-[node name="DetailsPanel" type="PanelContainer" parent="MarginContainer/VBoxContainer/MainContent" unique_id=1801975999]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/MainContent/DetailsPanel" unique_id=994677202]
-layout_mode = 2
-theme_override_constants/separation = 10
-
-[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/MainContent/DetailsPanel/VBoxContainer" unique_id=2013621134]
-layout_mode = 2
-theme_override_font_sizes/font_size = 18
-text = "Gladiator Details"
-horizontal_alignment = 1
-
-[node name="StatsLabel" type="Label" parent="MarginContainer/VBoxContainer/MainContent/DetailsPanel/VBoxContainer" unique_id=1498742922]
-layout_mode = 2
-text = "Select a gladiator to view stats."
-autowrap_mode = 2
-
-[node name="ActionsContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/MainContent/DetailsPanel/VBoxContainer" unique_id=1069703233]
-layout_mode = 2
-theme_override_constants/separation = 12
 alignment = 1
-
-[node name="FeedButton" type="Button" parent="MarginContainer/VBoxContainer/MainContent/DetailsPanel/VBoxContainer/ActionsContainer" unique_id=1350690586]
-layout_mode = 2
-text = "Feed (-6 Food)"
-
-[node name="HealButton" type="Button" parent="MarginContainer/VBoxContainer/MainContent/DetailsPanel/VBoxContainer/ActionsContainer" unique_id=928809272]
-layout_mode = 2
-text = "Heal Buff (-5 Gold)"
-
-[node name="TrainButton" type="Button" parent="MarginContainer/VBoxContainer/MainContent/DetailsPanel/VBoxContainer/ActionsContainer" unique_id=1134421187]
-layout_mode = 2
-text = "Train (3 Days)"
-
-[node name="UpgradeContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/MainContent/DetailsPanel/VBoxContainer" unique_id=1712909604]
-visible = false
-layout_mode = 2
-theme_override_constants/separation = 12
-alignment = 1
-
-[node name="UpgradeTankButton" type="Button" parent="MarginContainer/VBoxContainer/MainContent/DetailsPanel/VBoxContainer/UpgradeContainer" unique_id=597439271]
-layout_mode = 2
-text = "To Tank (-10G)"
-
-[node name="UpgradeFighterButton" type="Button" parent="MarginContainer/VBoxContainer/MainContent/DetailsPanel/VBoxContainer/UpgradeContainer" unique_id=411621067]
-layout_mode = 2
-text = "To Fighter (-10G)"
-
-[node name="UpgradeAssassinButton" type="Button" parent="MarginContainer/VBoxContainer/MainContent/DetailsPanel/VBoxContainer/UpgradeContainer" unique_id=1047586129]
-layout_mode = 2
-text = "To Assassin (-10G)"
 
 [node name="HSeparator2" type="HSeparator" parent="MarginContainer/VBoxContainer" unique_id=357358843]
 layout_mode = 2
@@ -154,12 +91,6 @@ layout_mode = 2
 layout_mode = 2
 theme_override_constants/separation = 20
 alignment = 1
-
-[node name="MarketplaceButton" type="Button" parent="MarginContainer/VBoxContainer/BottomActions" unique_id=2013370041]
-custom_minimum_size = Vector2(200, 50)
-layout_mode = 2
-theme_override_font_sizes/font_size = 20
-text = "Marketplace"
 
 [node name="NextDayButton" type="Button" parent="MarginContainer/VBoxContainer/BottomActions" unique_id=167239333]
 custom_minimum_size = Vector2(200, 50)
@@ -172,6 +103,53 @@ custom_minimum_size = Vector2(200, 50)
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
 text = "Go To Battle"
+
+[node name="DetailsPanel" type="VBoxContainer" parent="." unique_id=1801975999]
+visible = false
+layout_mode = 0
+offset_right = 250.0
+offset_bottom = 150.0
+size_flags_horizontal = 3
+theme_override_constants/separation = 10
+alignment = 1
+
+[node name="StatsLabel" type="Label" parent="DetailsPanel" unique_id=1498742922]
+layout_mode = 2
+text = "Select a gladiator to view stats."
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="ActionsContainer" type="HBoxContainer" parent="DetailsPanel" unique_id=1069703233]
+layout_mode = 2
+theme_override_constants/separation = 12
+alignment = 1
+
+[node name="HealButton" type="Button" parent="DetailsPanel/ActionsContainer" unique_id=928809272]
+layout_mode = 2
+text = "Heal Buff (-5 Gold)"
+
+[node name="CloseDetailsButton" type="Button" parent="DetailsPanel/ActionsContainer" unique_id=1134421188]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.3, 0.3, 1)
+text = "X"
+
+[node name="UpgradeContainer" type="HBoxContainer" parent="DetailsPanel" unique_id=1712909604]
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 12
+alignment = 1
+
+[node name="UpgradeTankButton" type="Button" parent="DetailsPanel/UpgradeContainer" unique_id=597439271]
+layout_mode = 2
+text = "To Tank (-10G)"
+
+[node name="UpgradeFighterButton" type="Button" parent="DetailsPanel/UpgradeContainer" unique_id=411621067]
+layout_mode = 2
+text = "To Fighter (-10G)"
+
+[node name="UpgradeAssassinButton" type="Button" parent="DetailsPanel/UpgradeContainer" unique_id=1047586129]
+layout_mode = 2
+text = "To Assassin (-10G)"
 
 [node name="MarketModal" type="ColorRect" parent="." unique_id=616433077]
 visible = false
@@ -247,10 +225,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -150.0
-offset_top = -120.0
-offset_right = 150.0
-offset_bottom = 120.0
+offset_left = -117.0
+offset_top = -140.5
+offset_right = 117.0
+offset_bottom = 140.5
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -291,15 +269,168 @@ text = "Buff All Stats (-35 Gold)"
 layout_mode = 2
 text = "Close"
 
-[connection signal="pressed" from="MarginContainer/VBoxContainer/MainContent/DetailsPanel/VBoxContainer/ActionsContainer/FeedButton" to="." method="_on_feed_button_pressed"]
-[connection signal="pressed" from="MarginContainer/VBoxContainer/MainContent/DetailsPanel/VBoxContainer/ActionsContainer/HealButton" to="." method="_on_heal_button_pressed"]
-[connection signal="pressed" from="MarginContainer/VBoxContainer/MainContent/DetailsPanel/VBoxContainer/ActionsContainer/TrainButton" to="." method="_on_train_button_pressed"]
-[connection signal="pressed" from="MarginContainer/VBoxContainer/MainContent/DetailsPanel/VBoxContainer/UpgradeContainer/UpgradeTankButton" to="." method="_on_upgrade_tank_pressed"]
-[connection signal="pressed" from="MarginContainer/VBoxContainer/MainContent/DetailsPanel/VBoxContainer/UpgradeContainer/UpgradeFighterButton" to="." method="_on_upgrade_fighter_pressed"]
-[connection signal="pressed" from="MarginContainer/VBoxContainer/MainContent/DetailsPanel/VBoxContainer/UpgradeContainer/UpgradeAssassinButton" to="." method="_on_upgrade_assassin_pressed"]
-[connection signal="pressed" from="MarginContainer/VBoxContainer/BottomActions/MarketplaceButton" to="." method="_on_marketplace_button_pressed"]
+[node name="DoorActions" type="Control" parent="." unique_id=12345]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 4.0
+offset_top = -8.0
+offset_right = 4.0
+offset_bottom = -8.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="FeedMenuButton" type="Button" parent="DoorActions" unique_id=12347]
+layout_mode = 1
+offset_left = 58.0
+offset_top = 95.0
+offset_right = 158.0
+offset_bottom = 285.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 16
+text = "Kitchen"
+flat = true
+
+[node name="MarketplaceMenuButton" type="Button" parent="DoorActions" unique_id=12346]
+layout_mode = 1
+offset_left = 189.0
+offset_top = 81.0
+offset_right = 314.0
+offset_bottom = 301.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 16
+text = "Marketplace"
+flat = true
+
+[node name="TrainMenuButton" type="Button" parent="DoorActions" unique_id=12348]
+layout_mode = 1
+offset_left = 508.0
+offset_top = 91.0
+offset_right = 608.0
+offset_bottom = 281.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 16
+text = "Train"
+flat = true
+
+[node name="ActionModals" type="Control" parent="." unique_id=12349]
+anchors_preset = 0
+
+[node name="FeedModal" type="ColorRect" parent="ActionModals" unique_id=12350]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.784314)
+
+[node name="Panel" type="PanelContainer" parent="ActionModals/FeedModal" unique_id=12351]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -150.0
+offset_top = -100.0
+offset_right = 150.0
+offset_bottom = 100.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="ActionModals/FeedModal/Panel" unique_id=12352]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="VBox" type="VBoxContainer" parent="ActionModals/FeedModal/Panel/MarginContainer" unique_id=12353]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Label" type="Label" parent="ActionModals/FeedModal/Panel/MarginContainer/VBox" unique_id=12354]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Feed Gladiator"
+horizontal_alignment = 1
+
+[node name="ScrollContainer" type="ScrollContainer" parent="ActionModals/FeedModal/Panel/MarginContainer/VBox" unique_id=123541]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="FeedList" type="VBoxContainer" parent="ActionModals/FeedModal/Panel/MarginContainer/VBox/ScrollContainer" unique_id=123542]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="CloseFeedButton" type="Button" parent="ActionModals/FeedModal/Panel/MarginContainer/VBox" unique_id=12355]
+layout_mode = 2
+text = "Close"
+
+[node name="TrainListModal" type="ColorRect" parent="ActionModals" unique_id=12356]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.784314)
+
+[node name="Panel" type="PanelContainer" parent="ActionModals/TrainListModal" unique_id=12357]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -150.0
+offset_top = -100.0
+offset_right = 150.0
+offset_bottom = 100.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="ActionModals/TrainListModal/Panel" unique_id=12358]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="VBox" type="VBoxContainer" parent="ActionModals/TrainListModal/Panel/MarginContainer" unique_id=12359]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Label" type="Label" parent="ActionModals/TrainListModal/Panel/MarginContainer/VBox" unique_id=12360]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Train Gladiator"
+horizontal_alignment = 1
+
+[node name="ScrollContainer" type="ScrollContainer" parent="ActionModals/TrainListModal/Panel/MarginContainer/VBox" unique_id=123601]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="TrainList" type="VBoxContainer" parent="ActionModals/TrainListModal/Panel/MarginContainer/VBox/ScrollContainer" unique_id=123602]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="CloseTrainListButton" type="Button" parent="ActionModals/TrainListModal/Panel/MarginContainer/VBox" unique_id=12361]
+layout_mode = 2
+text = "Close"
+
 [connection signal="pressed" from="MarginContainer/VBoxContainer/BottomActions/NextDayButton" to="." method="_on_next_day_button_pressed"]
 [connection signal="pressed" from="MarginContainer/VBoxContainer/BottomActions/ToBattleButton" to="." method="_on_to_battle_button_pressed"]
+[connection signal="pressed" from="DetailsPanel/ActionsContainer/HealButton" to="." method="_on_heal_button_pressed"]
+[connection signal="pressed" from="DetailsPanel/ActionsContainer/CloseDetailsButton" to="." method="_on_close_details_pressed"]
+[connection signal="pressed" from="DetailsPanel/UpgradeContainer/UpgradeTankButton" to="." method="_on_upgrade_tank_pressed"]
+[connection signal="pressed" from="DetailsPanel/UpgradeContainer/UpgradeFighterButton" to="." method="_on_upgrade_fighter_pressed"]
+[connection signal="pressed" from="DetailsPanel/UpgradeContainer/UpgradeAssassinButton" to="." method="_on_upgrade_assassin_pressed"]
 [connection signal="pressed" from="MarketModal/Panel/MarginContainer/VBox/BuyFoodButton" to="." method="_on_buy_food_button_pressed"]
 [connection signal="pressed" from="MarketModal/Panel/MarginContainer/VBox/SellFoodButton" to="." method="_on_sell_food_button_pressed"]
 [connection signal="pressed" from="MarketModal/Panel/MarginContainer/VBox/BuySlaveButton" to="." method="_on_buy_slave_button_pressed"]
@@ -309,9 +440,8 @@ text = "Close"
 [connection signal="pressed" from="TrainModal/Panel/MarginContainer/VBox/TrainDodgeButton" to="." method="_on_train_dodge_pressed"]
 [connection signal="pressed" from="TrainModal/Panel/MarginContainer/VBox/TrainAllButton" to="." method="_on_train_all_pressed"]
 [connection signal="pressed" from="TrainModal/Panel/MarginContainer/VBox/CloseTrainButton" to="." method="_on_close_train_button_pressed"]
-
-[connection signal="pressed" from="DoorActions/MarketplaceMenuButton" to="." method="_on_marketplace_menu_pressed"]
 [connection signal="pressed" from="DoorActions/FeedMenuButton" to="." method="_on_feed_menu_pressed"]
+[connection signal="pressed" from="DoorActions/MarketplaceMenuButton" to="." method="_on_marketplace_menu_pressed"]
 [connection signal="pressed" from="DoorActions/TrainMenuButton" to="." method="_on_train_menu_pressed"]
 [connection signal="pressed" from="ActionModals/FeedModal/Panel/MarginContainer/VBox/CloseFeedButton" to="." method="_on_close_feed_pressed"]
 [connection signal="pressed" from="ActionModals/TrainListModal/Panel/MarginContainer/VBox/CloseTrainListButton" to="." method="_on_close_train_list_pressed"]
