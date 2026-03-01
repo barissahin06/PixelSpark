@@ -417,27 +417,25 @@ func _show_gladiator_picker() -> void:
 		var g = GameManager.roster[i]
 		if g.is_active and g.current_action == "idle" and g.current_hp > 0:
 			available_count += 1
-			var row = PanelContainer.new()
-			row.add_theme_stylebox_override("panel", RomanTheme.create_row_style())
+			
+			var btn = Button.new()
+			btn.custom_minimum_size.y = 70
 			
 			var hbox = HBoxContainer.new()
-			hbox.add_theme_constant_override("separation", 8)
-			row.add_child(hbox)
+			hbox.add_theme_constant_override("separation", 12)
+			hbox.set_anchors_preset(Control.PRESET_FULL_RECT)
 			
-			# Checkbox for multi-select
-			var check = CheckBox.new()
-			check.add_theme_color_override("font_color", RomanTheme.MARBLE_CREAM)
-			var glad_idx = i
-			check.toggled.connect(func(toggled_on):
-				if toggled_on:
-					if picker_selected.size() < max_player_count:
-						picker_selected.append(glad_idx)
-					else:
-						check.set_pressed_no_signal(false) # Can't select more
-				else:
-					picker_selected.erase(glad_idx)
-			)
-			hbox.add_child(check)
+			# Add margin so content isn't hugging the edge of the button
+			var margin = MarginContainer.new()
+			margin.add_theme_constant_override("margin_left", 12)
+			margin.add_theme_constant_override("margin_right", 12)
+			margin.add_theme_constant_override("margin_top", 6)
+			margin.add_theme_constant_override("margin_bottom", 6)
+			margin.set_anchors_preset(Control.PRESET_FULL_RECT)
+			margin.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			
+			btn.add_child(margin)
+			margin.add_child(hbox)
 			
 			var icon = TextureRect.new()
 			icon.custom_minimum_size = Vector2(48, 48)
@@ -450,16 +448,53 @@ func _show_gladiator_picker() -> void:
 			
 			var info = Label.new()
 			info.text = "%s [Lv.%d %s]\nHP: %d/%d | ATK: %d | DOD: %.0f%%" % [g.g_name, g.level, g.type, g.current_hp, g.max_hp, g.attack_damage, g.dodge_chance]
-			info.add_theme_font_size_override("font_size", 13)
+			info.add_theme_font_size_override("font_size", 14)
 			info.add_theme_color_override("font_color", RomanTheme.MARBLE_CREAM)
 			info.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			info.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 			hbox.add_child(info)
+			
+			var glad_idx = i
+			
+			# Stylish toggled appearance using StyleBoxes
+			var style_selected = StyleBoxFlat.new()
+			style_selected.bg_color = Color(0.3, 0.4, 0.2, 0.8) # Greenish tint for selected
+			style_selected.border_color = RomanTheme.VICTORY_GREEN
+			style_selected.set_border_width_all(2)
+			style_selected.set_corner_radius_all(6)
+			
+			var style_normal = StyleBoxFlat.new()
+			style_normal.bg_color = Color(0.15, 0.12, 0.10, 0.8)
+			style_normal.border_color = Color(0.3, 0.25, 0.2)
+			style_normal.set_border_width_all(1)
+			style_normal.set_corner_radius_all(6)
+			
+			# Update visually when state changes
+			var update_visuals = func():
+				if picker_selected.has(glad_idx):
+					btn.add_theme_stylebox_override("normal", style_selected)
+					btn.add_theme_stylebox_override("hover", style_selected)
+					btn.add_theme_stylebox_override("pressed", style_selected)
+				else:
+					btn.add_theme_stylebox_override("normal", style_normal)
+					btn.add_theme_stylebox_override("hover", style_normal)
+					btn.add_theme_stylebox_override("pressed", style_normal)
+			
+			btn.pressed.connect(func():
+				if picker_selected.has(glad_idx):
+					picker_selected.erase(glad_idx)
+				else:
+					if picker_selected.size() < max_player_count:
+						picker_selected.append(glad_idx)
+				update_visuals.call()
+			)
 			
 			# Auto-select gladiators up to max capacity
 			if picker_selected.size() < max_player_count:
-				check.button_pressed = true # toggled signal handles picker_selected
+				picker_selected.append(glad_idx)
 			
-			picker_list.add_child(row)
+			update_visuals.call()
+			picker_list.add_child(btn)
 	
 	if available_count == 0:
 		var no_glad = Label.new()
