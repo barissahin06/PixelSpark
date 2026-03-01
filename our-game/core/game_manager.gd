@@ -9,9 +9,10 @@ var max_roster_size: int = 20
 
 # Battle System
 var days_to_next_battle: int = 0
+var battles_won: int = 0 # Track wins for progressive difficulty
 
 # Slave Market
-var slave_market: Array = []  # Array of Dictionaries with slave data
+var slave_market: Array = [] # Array of Dictionaries with slave data
 var last_market_refresh_day: int = 0
 
 # Slave name pools
@@ -33,6 +34,7 @@ func _ready():
 func reset_run():
 	current_day = 1
 	days_to_next_battle = randi_range(3, 7)
+	battles_won = 0
 	gold = 100
 	food = 50
 	roster.clear()
@@ -75,6 +77,10 @@ func add_gladiator(gladiator_id: String):
 	new_glad.current_stamina = model.starting_stamina
 	new_glad.attack_damage = model.attack_damage
 	new_glad.dodge_chance = model.dodge_chance
+	# Store base stats for level-up threshold calculations
+	new_glad.base_hp = model.starting_health
+	new_glad.base_attack = model.attack_damage
+	new_glad.base_dodge = model.dodge_chance
 	
 	roster.append(new_glad)
 	
@@ -128,7 +134,7 @@ func pass_day():
 	print("Day %d started! Food: %d | Gold: %d" % [current_day, food, gold])
 
 func reset_battle_timer():
-	purge_dead()  # Clean up dead gladiators right after battle
+	purge_dead() # Clean up dead gladiators right after battle
 	days_to_next_battle = randi_range(3, 7)
 
 func feed_gladiator(index: int) -> bool:
@@ -209,6 +215,10 @@ func buy_market_slave(index: int) -> bool:
 	new_glad.dodge_chance = data["dodge"]
 	new_glad.hunger = 100
 	new_glad.traits.append(data["trait"])
+	# Store base stats for level-up threshold calculations
+	new_glad.base_hp = data["hp"]
+	new_glad.base_attack = data["atk"]
+	new_glad.base_dodge = data["dodge"]
 	
 	roster.append(new_glad)
 	slave_market.remove_at(index)
@@ -253,7 +263,7 @@ func train_gladiator(index: int, target: String) -> bool:
 			if gold >= cost:
 				gold -= cost
 				var duration = 3 - TraitSystem.get_training_speed_bonus(glad)
-				duration = maxi(duration, 1)  # Minimum 1 day
+				duration = maxi(duration, 1) # Minimum 1 day
 				glad.start_training(duration, target)
 				return true
 	return false

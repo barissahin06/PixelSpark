@@ -57,12 +57,6 @@ theme_override_constants/separation = 12
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="TitleLabel" type="Label" parent="MarginContainer/VBoxContainer/TopBar" unique_id=496868404]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_font_sizes/font_size = 24
-text = "Ludus Management"
-
 [node name="GoldLabel" type="Label" parent="MarginContainer/VBoxContainer/TopBar" unique_id=1296694002]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.843137, 0, 1)
