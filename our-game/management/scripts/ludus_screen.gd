@@ -11,7 +11,7 @@ extends Control
 @onready var train_list: VBoxContainer = $ActionModals/TrainListModal/Panel/MarginContainer/VBox/ScrollContainer/TrainList
 
 # Per-type character textures (multi-directional for wandering)
-var type_textures: Dictionary = {}  # type -> {"south": tex, "east": tex, ...}
+var type_textures: Dictionary = {} # type -> {"south": tex, "east": tex, ...}
 
 const DIRECTIONS := ["south", "south-west", "west", "north-west", "north", "north-east", "east", "south-east"]
 const TYPE_FOLDERS := {
@@ -24,14 +24,14 @@ const TYPE_FOLDERS := {
 # Yard boundaries where gladiators can walk
 const YARD_MIN := Vector2(80, 320)
 const YARD_MAX := Vector2(720, 590)
-const DOOR_POS := Vector2(380, 280)  # Center door for battle transition
+const DOOR_POS := Vector2(380, 280) # Center door for battle transition
 
 # Wandering state per gladiator
-var _wander_targets: Array = []   # target Vector2
-var _wander_timers: Array = []    # pause timer
-var _wander_speeds: Array = []    # walk speed
-var _wander_active: bool = true   # false during battle transition
-var _gladiator_btns: Array = []   # TextureButton refs for sprite swapping
+var _wander_targets: Array = [] # target Vector2
+var _wander_timers: Array = [] # pause timer
+var _wander_speeds: Array = [] # walk speed
+var _wander_active: bool = true # false during battle transition
+var _gladiator_btns: Array = [] # TextureButton refs for sprite swapping
 
 # Battle transition
 var _battle_transition_overlay: ColorRect
@@ -39,6 +39,18 @@ var _transitioning_to_battle: bool = false
 
 # Ludus Management button
 var ludus_mgmt_btn: Button
+
+# Icon paths (pixel art generated via PixelLab)
+const ICON_DIR := "res://assets/ui/icons/"
+const ICON_KITCHEN := ICON_DIR + "icon_kitchen.png"
+const ICON_MARKETPLACE := ICON_DIR + "icon_marketplace.png"
+const ICON_TRAIN := ICON_DIR + "icon_train.png"
+const ICON_LUDUS_MGMT := ICON_DIR + "icon_ludus_mgmt.png"
+const ICON_PASS_DAY := ICON_DIR + "icon_pass_day.png"
+const ICON_BATTLE := ICON_DIR + "icon_battle.png"
+const ICON_GOLD := ICON_DIR + "icon_gold.png"
+const ICON_FOOD := ICON_DIR + "icon_food.png"
+const ICON_DAY := ICON_DIR + "icon_day.png"
 
 func _load_character_textures() -> void:
 	for type_name in TYPE_FOLDERS:
@@ -81,21 +93,21 @@ func _direction_from_velocity(vel: Vector2) -> String:
 		return "south"
 	var angle = vel.angle()
 	# Convert angle to 8 directions
-	if angle >= -PI/8 and angle < PI/8:
+	if angle >= -PI / 8 and angle < PI / 8:
 		return "east"
-	elif angle >= PI/8 and angle < 3*PI/8:
+	elif angle >= PI / 8 and angle < 3 * PI / 8:
 		return "south-east"
-	elif angle >= 3*PI/8 and angle < 5*PI/8:
+	elif angle >= 3 * PI / 8 and angle < 5 * PI / 8:
 		return "south"
-	elif angle >= 5*PI/8 and angle < 7*PI/8:
+	elif angle >= 5 * PI / 8 and angle < 7 * PI / 8:
 		return "south-west"
-	elif angle >= 7*PI/8 or angle < -7*PI/8:
+	elif angle >= 7 * PI / 8 or angle < -7 * PI / 8:
 		return "west"
-	elif angle >= -7*PI/8 and angle < -5*PI/8:
+	elif angle >= -7 * PI / 8 and angle < -5 * PI / 8:
 		return "north-west"
-	elif angle >= -5*PI/8 and angle < -3*PI/8:
+	elif angle >= -5 * PI / 8 and angle < -3 * PI / 8:
 		return "north"
-	elif angle >= -3*PI/8 and angle < -PI/8:
+	elif angle >= -3 * PI / 8 and angle < -PI / 8:
 		return "north-east"
 	return "south"
 
@@ -152,8 +164,8 @@ func _ready() -> void:
 	feed_modal.visible = false
 	train_list_modal.visible = false
 	_style_door_buttons()
-	_build_ludus_mgmt_button()
 	_build_battle_transition_overlay()
+	_setup_top_bar_icons()
 	_update_top_bar()
 	_populate_roster()
 	_build_bubble()
@@ -180,39 +192,142 @@ func _process(delta: float) -> void:
 # ================= Door Button Styling =================
 
 func _style_door_buttons() -> void:
-	## Apply Roman theme to all door action buttons
+	## Make door buttons transparent and door-shaped so the background doors show through
 	var door_actions = get_node_or_null("DoorActions")
 	if not door_actions:
 		return
 	
+	# Map button names to icon paths
+	var icon_map := {
+		"FeedMenuButton": ICON_KITCHEN,
+		"MarketplaceMenuButton": ICON_MARKETPLACE,
+		"TrainMenuButton": ICON_TRAIN,
+	}
+	
 	for child in door_actions.get_children():
 		if child is Button:
-			child.flat = false
-			RomanTheme.style_button(child, Color(0.14, 0.11, 0.08, 0.85))
+			child.flat = true
+			
+			# Transparent door-shaped style
+			var normal = StyleBoxFlat.new()
+			normal.bg_color = Color(0.0, 0.0, 0.0, 0.15) # Very transparent
+			normal.set_corner_radius_all(4)
+			normal.border_color = Color(0.6, 0.45, 0.2, 0.3)
+			normal.set_border_width_all(1)
+			child.add_theme_stylebox_override("normal", normal)
+			
+			var hover = StyleBoxFlat.new()
+			hover.bg_color = Color(1.0, 0.85, 0.4, 0.2) # Slight gold glow on hover
+			hover.set_corner_radius_all(4)
+			hover.border_color = RomanTheme.ROMAN_GOLD_BRIGHT
+			hover.set_border_width_all(2)
+			child.add_theme_stylebox_override("hover", hover)
+			
+			var pressed = StyleBoxFlat.new()
+			pressed.bg_color = Color(0.0, 0.0, 0.0, 0.3)
+			pressed.set_corner_radius_all(4)
+			child.add_theme_stylebox_override("pressed", pressed)
+			
 			child.add_theme_color_override("font_color", RomanTheme.MARBLE_CREAM)
 			child.add_theme_color_override("font_hover_color", RomanTheme.ROMAN_GOLD_BRIGHT)
+			child.add_theme_font_size_override("font_size", 14)
+			
+			# Create separate icon centered above the door button
+			var icon_path = icon_map.get(child.name, "")
+			if icon_path != "" and ResourceLoader.exists(icon_path):
+				var icon_rect = TextureRect.new()
+				icon_rect.texture = load(icon_path)
+				icon_rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+				icon_rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+				icon_rect.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+				icon_rect.custom_minimum_size = Vector2(48, 48)
+				icon_rect.size = Vector2(48, 48)
+				# Center icon horizontally above the button
+				var btn_center_x = child.position.x + child.size.x / 2.0
+				icon_rect.position = Vector2(btn_center_x - 24, child.position.y - 55)
+				icon_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
+				door_actions.add_child(icon_rect)
 	
 	# Hide the Upgrades button (replaced by Ludus Management)
 	var upgrades_btn = door_actions.get_node_or_null("UpgradesMenuButton")
 	if upgrades_btn:
 		upgrades_btn.visible = false
 
-func _build_ludus_mgmt_button() -> void:
-	## Ludus Management button pinned to top-left corner
-	ludus_mgmt_btn = RomanTheme.create_roman_button("🏛 Ludus", "", Vector2(110, 40))
-	ludus_mgmt_btn.position = Vector2(0, 0)
-	ludus_mgmt_btn.add_theme_font_size_override("font_size", 13)
-	ludus_mgmt_btn.pressed.connect(_on_upgrades_menu_pressed)
-	add_child(ludus_mgmt_btn)
+func _setup_top_bar_icons() -> void:
+	## Replace text-only labels with icon + value format for Gold, Food, Day
+	## Add a spacer first to push icons to the right
+	var top_bar = gold_label.get_parent()
+	if top_bar:
+		var spacer = Control.new()
+		spacer.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		top_bar.add_child(spacer)
+		top_bar.move_child(spacer, 0) # Put spacer first
+	_apply_icon_to_label(gold_label, ICON_GOLD)
+	_apply_icon_to_label(food_label, ICON_FOOD)
+	_apply_icon_to_label(day_label, ICON_DAY)
+
+func _apply_icon_to_label(label: Label, icon_path: String) -> void:
+	## We can't add textures to Labels directly, so we add a TextureRect sibling.
+	## The label's parent is the TopBar HBoxContainer.
+	if not ResourceLoader.exists(icon_path):
+		return
+	var parent = label.get_parent()
+	if not parent:
+		return
+	
+	# Create an HBox to hold icon + label together
+	var hbox = HBoxContainer.new()
+	hbox.add_theme_constant_override("separation", 4)
+	
+	# Insert the hbox at the same position as the label
+	var idx = label.get_index()
+	parent.remove_child(label)
+	parent.add_child(hbox)
+	parent.move_child(hbox, idx)
+	
+	# Create icon
+	var icon = TextureRect.new()
+	icon.texture = load(icon_path)
+	icon.custom_minimum_size = Vector2(24, 24)
+	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	icon.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	hbox.add_child(icon)
+	
+	# Re-add label
+	hbox.add_child(label)
 
 func _style_bottom_buttons() -> void:
-	## Style Next Day and Go To Battle buttons with Roman theme
+	## Style Next Day, Go To Battle, and Upgrades buttons with Roman theme + pixel art icons
 	if next_day_button:
 		RomanTheme.style_button(next_day_button, RomanTheme.ARENA_SAND_DARK)
 		next_day_button.add_theme_color_override("font_color", RomanTheme.MARBLE_CREAM)
+		if ResourceLoader.exists(ICON_PASS_DAY):
+			next_day_button.icon = load(ICON_PASS_DAY)
+			next_day_button.icon_alignment = HORIZONTAL_ALIGNMENT_LEFT
+			next_day_button.expand_icon = true
 	if to_battle_button:
 		RomanTheme.style_button(to_battle_button, RomanTheme.BLOOD_RED)
 		to_battle_button.add_theme_color_override("font_color", RomanTheme.MARBLE_CREAM)
+		if ResourceLoader.exists(ICON_BATTLE):
+			to_battle_button.icon = load(ICON_BATTLE)
+			to_battle_button.icon_alignment = HORIZONTAL_ALIGNMENT_LEFT
+			to_battle_button.expand_icon = true
+	
+	# Add Upgrades button to the bottom bar (same container as Pass Day / Battle)
+	var bottom_actions = next_day_button.get_parent() if next_day_button else null
+	if bottom_actions:
+		var upgrades_btn = Button.new()
+		upgrades_btn.text = "Upgrades"
+		upgrades_btn.custom_minimum_size = Vector2(200, 50)
+		upgrades_btn.add_theme_font_size_override("font_size", 20)
+		RomanTheme.style_button(upgrades_btn, Color(0.3, 0.25, 0.15, 0.9))
+		upgrades_btn.add_theme_color_override("font_color", RomanTheme.MARBLE_CREAM)
+		if ResourceLoader.exists(ICON_LUDUS_MGMT):
+			upgrades_btn.icon = load(ICON_LUDUS_MGMT)
+			upgrades_btn.icon_alignment = HORIZONTAL_ALIGNMENT_LEFT
+			upgrades_btn.expand_icon = true
+		upgrades_btn.pressed.connect(_on_upgrades_menu_pressed)
+		bottom_actions.add_child(upgrades_btn)
 
 func _build_battle_transition_overlay() -> void:
 	_battle_transition_overlay = ColorRect.new()
@@ -235,9 +350,9 @@ func _input(event: InputEvent) -> void:
 @onready var day_label: Label = $MarginContainer/VBoxContainer/TopBar/DayLabel
 
 func _update_top_bar() -> void:
-	gold_label.text = "Gold: %d" % GameManager.gold
-	food_label.text = "Food: %d" % GameManager.food
-	day_label.text = "Day: %d" % GameManager.current_day
+	gold_label.text = "%d" % GameManager.gold
+	food_label.text = "%d" % GameManager.food
+	day_label.text = "%d" % GameManager.current_day
 	_update_battle_button()
 
 func _update_battle_button() -> void:
@@ -286,12 +401,13 @@ func _populate_roster() -> void:
 		btn.gui_input.connect(func(event): _on_gladiator_gui_input(event, idx, container))
 		
 		var lbl = Label.new()
-		lbl.text = "%s (Lv. %d)" % [gladiator.g_name, gladiator.level]
+		var title_text = gladiator.get_title()
+		lbl.text = "%s (Lv.%d)\n%s" % [gladiator.g_name, gladiator.level, title_text]
 		lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		lbl.add_theme_font_size_override("font_size", 11)
-		lbl.add_theme_color_override("font_color", RomanTheme.MARBLE_CREAM)
+		lbl.add_theme_font_size_override("font_size", 10)
+		lbl.add_theme_color_override("font_color", gladiator.get_title_color())
 		lbl.position = Vector2(-20, 66)
-		lbl.size = Vector2(120, 20)
+		lbl.size = Vector2(120, 30)
 		lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		
 		container.add_child(btn)
@@ -302,7 +418,7 @@ func _populate_roster() -> void:
 		
 		# Initialize wandering state
 		_wander_targets.append(_random_yard_pos())
-		_wander_timers.append(randf_range(0.5, 3.0))  # Initial pause
+		_wander_timers.append(randf_range(0.5, 3.0)) # Initial pause
 		_wander_speeds.append(randf_range(25.0, 50.0))
 
 func _random_yard_pos() -> Vector2:
@@ -316,7 +432,7 @@ func _tick_wandering(delta: float) -> void:
 		if i >= GameManager.roster.size():
 			break
 		if _dragging_index == i:
-			continue  # Don't wander while being dragged
+			continue # Don't wander while being dragged
 		
 		var container = _gladiator_nodes[i]
 		var target = _wander_targets[i]
@@ -504,7 +620,7 @@ func _update_bubble() -> void:
 		return
 	
 	var g = selected_gladiator
-	var text = "⚔ %s  [Lv.%d %s]\n" % [g.g_name, g.level, g.type]
+	var text = "⚔ %s  [Lv.%d %s]\n%s\n" % [g.g_name, g.level, g.type, g.get_title()]
 	
 	# HP bar as text
 	var hp_pct = float(g.current_hp) / float(g.max_hp) if g.max_hp > 0 else 0.0
@@ -569,6 +685,8 @@ func _on_close_details_pressed() -> void:
 # ================= Actions =================
 
 func _on_marketplace_menu_pressed() -> void:
+	AudioManager.pause_bgm()
+	AudioManager.play_ui("market")
 	market_modal.visible = true
 
 func _on_feed_menu_pressed() -> void:
@@ -607,9 +725,13 @@ func _on_feed_menu_pressed() -> void:
 		feed_list.add_child(hbox)
 		
 	feed_modal.visible = true
+	AudioManager.pause_bgm()
+	AudioManager.play_ui("kitchen")
 
 func _on_close_feed_pressed():
 	feed_modal.visible = false
+	AudioManager.stop_ui()
+	AudioManager.resume_bgm()
 
 func _on_train_menu_pressed() -> void:
 	for child in train_list.get_children():
@@ -645,9 +767,13 @@ func _on_train_menu_pressed() -> void:
 		train_list.add_child(hbox)
 		
 	train_list_modal.visible = true
+	AudioManager.pause_bgm()
+	AudioManager.play_ui("train")
 
 func _on_close_train_list_pressed():
 	train_list_modal.visible = false
+	AudioManager.stop_ui()
+	AudioManager.resume_bgm()
 
 func _on_feed_button_pressed() -> void:
 	if selected_index != -1:
@@ -669,6 +795,8 @@ func _on_train_button_pressed() -> void:
 
 func _on_close_train_button_pressed() -> void:
 	train_modal.visible = false
+	AudioManager.stop_ui()
+	AudioManager.resume_bgm()
 
 func _on_train_health_pressed() -> void:
 	if GameManager.train_gladiator(selected_index, "health"):
@@ -751,6 +879,8 @@ func _on_marketplace_button_pressed() -> void:
 
 func _on_close_market_button_pressed() -> void:
 	market_modal.visible = false
+	AudioManager.stop_ui()
+	AudioManager.resume_bgm()
 
 func _on_buy_food_button_pressed() -> void:
 	if GameManager.buy_food():
@@ -911,7 +1041,7 @@ func _create_slave_market_row(data: Dictionary, index: int) -> PanelContainer:
 		if GameManager.buy_market_slave(index):
 			_update_top_bar()
 			_populate_roster()
-			_open_slave_market()  # Refresh the modal
+			_open_slave_market() # Refresh the modal
 	)
 	buy_vbox.add_child(buy_btn)
 	
@@ -995,10 +1125,16 @@ func _build_upgrades_modal() -> void:
 	var close_btn = Button.new()
 	close_btn.text = "Close"
 	close_btn.custom_minimum_size.y = 35
-	close_btn.pressed.connect(func(): upgrades_modal.visible = false)
+	close_btn.pressed.connect(func():
+		upgrades_modal.visible = false
+		AudioManager.stop_ui()
+		AudioManager.resume_bgm()
+	)
 	vbox.add_child(close_btn)
 
 func _on_upgrades_menu_pressed() -> void:
+	AudioManager.pause_bgm()
+	AudioManager.play_ui("upgrade")
 	_open_upgrades_modal()
 
 func _open_upgrades_modal() -> void:
@@ -1126,7 +1262,7 @@ func _on_build_upgrade(upgrade_id: String) -> void:
 		if cost > 0:
 			GameManager.gold -= cost
 			_update_top_bar()
-			_open_upgrades_modal()  # Refresh
+			_open_upgrades_modal() # Refresh
 
 # ================= Event System =================
 
@@ -1345,7 +1481,7 @@ func _check_game_over() -> void:
 		var cheapest = 999
 		for slave in GameManager.slave_market:
 			if slave is Dictionary and int(slave.get("price", 999)) < cheapest:
-				cheapest = int(slave["price"])
+				cheapest = int(slave ["price"])
 		
 		if GameManager.gold < cheapest:
 			# Update stats label

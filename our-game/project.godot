@@ -21,6 +21,7 @@ GameData="*res://shared/utils/game_data.gd"
 SceneRouter="*res://core/scene_router.gd"
 GameManager="*res://core/game_manager.gd"
 SaveManager="*res://core/save_manager.gd"
+AudioManager="*res://core/audio_manager.gd"
 
 [display]
 

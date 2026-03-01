@@ -31,10 +31,10 @@ Transform the game UI to feel like an authentic ancient Roman gladiator manageme
 - Generate 6 themed icons for buttons using generate_image tool
 
 ## TODO / Progress
-- [ ] Roman button helpers
-- [ ] Pixel art icons
-- [ ] Ludus Management button top-left
-- [ ] Gladiator wandering
-- [ ] Battle transition
-- [ ] Slow battle result
+- [x] Roman button helpers
+- [x] Pixel art icons (generated via PixelLab MCP — download from docs/asset_downloads.md)
+- [x] Ludus Management button top-left
+- [x] Gladiator wandering
+- [x] Battle transition
+- [x] Slow battle result
 - [ ] Final verification
