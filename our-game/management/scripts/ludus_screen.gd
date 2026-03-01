@@ -232,21 +232,49 @@ func _style_door_buttons() -> void:
 			child.add_theme_color_override("font_hover_color", RomanTheme.ROMAN_GOLD_BRIGHT)
 			child.add_theme_font_size_override("font_size", 14)
 			
-			# Create separate icon centered above the door button
+			# Set icon directly to the button
 			var icon_path = icon_map.get(child.name, "")
 			if icon_path != "" and ResourceLoader.exists(icon_path):
-				var icon_rect = TextureRect.new()
-				icon_rect.texture = load(icon_path)
-				icon_rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-				icon_rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-				icon_rect.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-				icon_rect.custom_minimum_size = Vector2(48, 48)
-				icon_rect.size = Vector2(48, 48)
-				# Center icon horizontally above the button
-				var btn_center_x = child.position.x + child.size.x / 2.0
-				icon_rect.position = Vector2(btn_center_x - 24, child.position.y - 55)
-				icon_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
-				door_actions.add_child(icon_rect)
+				child.icon = load(icon_path)
+				child.icon_alignment = HORIZONTAL_ALIGNMENT_CENTER
+				child.vertical_icon_alignment = VERTICAL_ALIGNMENT_TOP
+				child.expand_icon = true
+				child.add_theme_constant_override("icon_max_width", 60)
+				
+				# Calculate a dynamic offset based on the button's Y position in the scene
+				# Feed menu is at Y=95, Marketplace is at Y=81. This dynamically pushes higher buttons down.
+				var extra_y = 95 - child.position.y
+				if extra_y < 0: extra_y = 0
+				
+				# Push the icon down
+				var margin_theme = child.get_theme_stylebox("normal").duplicate()
+				margin_theme.content_margin_top = 40 + extra_y
+				child.add_theme_stylebox_override("normal", margin_theme)
+				
+				var margin_hover = child.get_theme_stylebox("hover").duplicate()
+				margin_hover.content_margin_top = 40 + extra_y
+				child.add_theme_stylebox_override("hover", margin_hover)
+				
+				var margin_pressed = child.get_theme_stylebox("pressed").duplicate()
+				margin_pressed.content_margin_top = 40 + extra_y
+				child.add_theme_stylebox_override("pressed", margin_pressed)
+				
+				# Since Godot 4 Button doesn't easily let us overlap text and expanded icons,
+				# we'll extract the text into a real Label that we can position freely exactly where we want.
+				var btn_text = child.text
+				child.text = "" # Remove text from button so it doesn't render twice
+				
+				var custom_label = Label.new()
+				custom_label.text = btn_text
+				custom_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+				# Position the text: X is centered across the button width. 
+				# Y is based on the icon's top margin (40) + icon height (60) + a tiny gap (5) = 105
+				custom_label.position = Vector2(0, 90 + extra_y)
+				custom_label.size = Vector2(child.size.x, 30) # Ensure it spans fully to center
+				custom_label.add_theme_color_override("font_color", RomanTheme.MARBLE_CREAM)
+				custom_label.add_theme_font_size_override("font_size", 14)
+				
+				child.add_child(custom_label)
 	
 	# Hide the Upgrades button (replaced by Ludus Management)
 	var upgrades_btn = door_actions.get_node_or_null("UpgradesMenuButton")
@@ -261,7 +289,17 @@ func _setup_top_bar_icons() -> void:
 		var spacer = Control.new()
 		spacer.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		top_bar.add_child(spacer)
-		top_bar.move_child(spacer, 0) # Put spacer first
+		top_bar.move_child(spacer, 0) # Put spacer first to push the rest to the right
+		
+		# Fix: Containers override position.y. We must modify the MarginContainer's margin directly.
+		# The parent hierarchy is: TopBar(HBox) -> VBoxContainer -> MarginContainer
+		var vbox = top_bar.get_parent()
+		if vbox:
+			var margin_container = vbox.get_parent()
+			if margin_container and margin_container is MarginContainer:
+				# Default margin_top is 24 in the scene. Reduce by 10 to move it up.
+				margin_container.add_theme_constant_override("margin_top", 14)
+		
 	_apply_icon_to_label(gold_label, ICON_GOLD)
 	_apply_icon_to_label(food_label, ICON_FOOD)
 	_apply_icon_to_label(day_label, ICON_DAY)
@@ -376,7 +414,7 @@ func _populate_roster() -> void:
 	
 	# Reset positions if roster changed
 	while _gladiator_positions.size() < GameManager.roster.size():
-		var idx = _gladiator_positions.size()
+		var _idx = _gladiator_positions.size()
 		var x = randf_range(YARD_MIN.x + 40, YARD_MAX.x - 40)
 		var y = randf_range(YARD_MIN.y + 20, YARD_MAX.y - 20)
 		_gladiator_positions.append(Vector2(x, y))
@@ -433,6 +471,8 @@ func _tick_wandering(delta: float) -> void:
 			break
 		if _dragging_index == i:
 			continue # Don't wander while being dragged
+		if selected_index == i and bubble_overlay and bubble_overlay.visible:
+			continue # Don't wander while the stats bubble is open for this gladiator
 		
 		var container = _gladiator_nodes[i]
 		var target = _wander_targets[i]
@@ -508,6 +548,9 @@ func _on_gladiator_selected(index: int, btn_node: TextureButton = null) -> void:
 	_show_bubble(btn_node)
 
 func _build_bubble() -> void:
+	if bubble_overlay and is_instance_valid(bubble_overlay):
+		bubble_overlay.queue_free()
+		
 	bubble_overlay = ColorRect.new()
 	bubble_overlay.color = Color(0, 0, 0, 0.35)
 	bubble_overlay.set_anchors_preset(Control.PRESET_FULL_RECT)
@@ -524,8 +567,8 @@ func _build_bubble() -> void:
 	bubble_overlay.add_child(bubble_pointer)
 	
 	bubble_panel = PanelContainer.new()
+	# Set ONLY minimum width. Height should auto-adjust to content.
 	bubble_panel.custom_minimum_size = Vector2(240, 0)
-	bubble_panel.size = Vector2(240, 0)
 	
 	var style = StyleBoxFlat.new()
 	style.bg_color = Color(0.12, 0.12, 0.15, 0.95)
