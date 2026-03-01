@@ -7,7 +7,7 @@ var battle: BattleManager = null
 var card_buttons: Array[Button] = []
 
 # Arena UI
-var arena_bg: ColorRect
+var arena_bg: TextureRect
 var main_vbox: VBoxContainer
 var turn_label: Label
 var info_label: Label
@@ -34,6 +34,14 @@ var enemy_name_labels: Array[Label] = []
 var enemy_hp_bars: Array[ProgressBar] = []
 var enemy_hp_labels: Array[Label] = []
 
+# Animation tracking for gladiator idle/walking
+var player_anim_frames: Array[Array] = []
+var enemy_anim_frames: Array[Array] = []
+var player_anim_index: Array[int] = []
+var enemy_anim_index: Array[int] = []
+var anim_timer: float = 0.0
+var anim_frame_duration: float = 0.15
+
 # Selection highlight
 var player_highlight_panels: Array[Panel] = []
 var enemy_highlight_panels: Array[Panel] = []
@@ -58,6 +66,7 @@ func _ready() -> void:
 	_load_character_textures()
 	_build_ui()
 	_show_gladiator_picker()
+	set_process(true)
 
 # ======================== TEXTURE LOADING ========================
 
@@ -99,22 +108,87 @@ func _get_picker_texture(type_name: String) -> Texture2D:
 		return type_textures_south[type_name]
 	return null
 
+func _load_animation_frames(type_name: String, direction: String) -> Array:
+	"""Load animation frames for breathing-idle (for Tank) or walking"""
+	var frames: Array = []
+	var base_path := "res://assets/art/characters/"
+	var type_map := {
+		"Murmillo": "Tank_Gladiator",
+		"Thraex": "Fighter_Gladiator",
+		"Retiarius": "Assassin_Gladiator",
+	}
+	var folder_name = type_map.get(type_name, "")
+	if folder_name.is_empty():
+		return frames
+	
+	# Try breathing-idle first (Tank gladiators)
+	for i in range(10):
+		var frame_path = base_path + folder_name + "/animations/breathing-idle/" + direction + "/frame_%03d.png" % i
+		if ResourceLoader.exists(frame_path):
+			frames.append(load(frame_path))
+		else:
+			break
+	
+	# If no breathing-idle, try walking
+	if frames.is_empty():
+		for i in range(10):
+			var frame_path = base_path + folder_name + "/animations/walking/" + direction + "/frame_%03d.png" % i
+			if ResourceLoader.exists(frame_path):
+				frames.append(load(frame_path))
+			else:
+				break
+	
+	return frames
+
+# ======================== ANIMATION UPDATE ========================
+
+func _process(delta: float) -> void:
+	"""Update gladiator idle animations"""
+	if not battle or not battle.battle_active or player_anim_frames.is_empty():
+		return
+	
+	anim_timer += delta
+	if anim_timer >= anim_frame_duration:
+		anim_timer -= anim_frame_duration
+		
+		# Update player animations
+		for i in range(player_anim_frames.size()):
+			if player_anim_frames[i].size() > 0:
+				player_anim_index[i] = (player_anim_index[i] + 1) % player_anim_frames[i].size()
+				player_sprites[i].texture = player_anim_frames[i][player_anim_index[i]]
+		
+		# Update enemy animations
+		for i in range(enemy_anim_frames.size()):
+			if enemy_anim_frames[i].size() > 0:
+				enemy_anim_index[i] = (enemy_anim_index[i] + 1) % enemy_anim_frames[i].size()
+				enemy_sprites[i].texture = enemy_anim_frames[i][enemy_anim_index[i]]
+
 # ======================== UI BUILDING ========================
 
 func _build_ui() -> void:
-	# --- Arena Background ---
-	arena_bg = ColorRect.new()
+	# --- Arena Background (Battle Arena Image) ---
+	arena_bg = TextureRect.new()
 	arena_bg.set_anchors_preset(Control.PRESET_FULL_RECT)
-	arena_bg.color = RomanTheme.DARK_STONE
-	add_child(arena_bg)
+	arena_bg.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	arena_bg.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	arena_bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	
-	var sand_floor = ColorRect.new()
-	sand_floor.set_anchors_preset(Control.PRESET_BOTTOM_WIDE)
-	sand_floor.grow_vertical = Control.GROW_DIRECTION_BEGIN
-	sand_floor.custom_minimum_size.y = 180
-	sand_floor.offset_top = -180
-	sand_floor.color = Color(0.35, 0.28, 0.18, 0.6)
-	add_child(sand_floor)
+	# Load texture safely
+	var bg_tex = load("res://assets/ui/battle_arena.png")
+	if bg_tex:
+		arena_bg.texture = bg_tex
+	else:
+		# Fallback: use dark color if texture fails to load
+		var fallback = ColorRect.new()
+		fallback.set_anchors_preset(Control.PRESET_FULL_RECT)
+		fallback.color = RomanTheme.DARK_STONE
+		fallback.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		add_child(fallback)
+		arena_bg = TextureRect.new()  # Keep it as TextureRect for type consistency
+		arena_bg.set_anchors_preset(Control.PRESET_FULL_RECT)
+		arena_bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	
+	add_child(arena_bg)
 	
 	# --- Main VBox ---
 	main_vbox = VBoxContainer.new()
@@ -137,77 +211,51 @@ func _build_ui() -> void:
 	turn_label.text = "⚔ ARENA COMBAT ⚔"
 	main_vbox.add_child(turn_label)
 	
-	# --- Enemy Stats Panel Row ---
-	var enemy_stats_row = HBoxContainer.new()
-	enemy_stats_row.add_theme_constant_override("separation", 6)
-	enemy_stats_row.alignment = BoxContainer.ALIGNMENT_CENTER
-	main_vbox.add_child(enemy_stats_row)
-	
-	# Create up to 3 enemy stat panels (hidden until battle starts)
-	for i in range(3):
-		var panel = _create_mini_fighter_panel("enemy", i)
-		panel.visible = false
-		enemy_stats_row.add_child(panel)
-		enemy_panels.append(panel)
-	
-	# --- Arena Center (sprites) ---
+	# --- Arena Center (sprites) - Positioned on background ---
 	arena_center_node = Control.new()
-	arena_center_node.custom_minimum_size.y = 220
+	arena_center_node.custom_minimum_size = Vector2(800, 300)
 	arena_center_node.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	arena_center_node.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	main_vbox.add_child(arena_center_node)
 	
-	# Arena sand ground
-	var arena_sand = ColorRect.new()
-	arena_sand.set_anchors_preset(Control.PRESET_BOTTOM_WIDE)
-	arena_sand.grow_vertical = Control.GROW_DIRECTION_BEGIN
-	arena_sand.custom_minimum_size.y = 80
-	arena_sand.offset_top = -80
-	arena_sand.color = Color(0.35, 0.28, 0.18, 0.4)
-	arena_center_node.add_child(arena_sand)
-	
-	# Sand floor line
-	var sand_line = ColorRect.new()
-	sand_line.custom_minimum_size = Vector2(700, 3)
-	sand_line.color = Color(0.45, 0.38, 0.25, 0.5)
-	sand_line.position = Vector2(20, 160)
-	arena_center_node.add_child(sand_line)
-	
-	# Create up to 3 player sprites + 3 enemy sprites
+	# Create player gladiators with panels above them
 	for i in range(3):
+		# Panel above
+		var panel = _create_inline_fighter_panel("player", i)
+		panel.visible = false
+		arena_center_node.add_child(panel)
+		player_panels.append(panel)
+		
+		# Sprite below
 		var ps = TextureRect.new()
 		ps.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		ps.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		ps.custom_minimum_size = Vector2(120, 140)
-		ps.size = Vector2(120, 140)
+		ps.custom_minimum_size = Vector2(100, 120)
+		ps.size = Vector2(100, 120)
 		ps.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 		ps.visible = false
 		arena_center_node.add_child(ps)
 		player_sprites.append(ps)
 	
+	# Create enemy gladiators with panels above them
 	for i in range(3):
+		# Panel above
+		var panel = _create_inline_fighter_panel("enemy", i)
+		panel.visible = false
+		arena_center_node.add_child(panel)
+		enemy_panels.append(panel)
+		
+		# Sprite below
 		var es = TextureRect.new()
 		es.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		es.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		es.custom_minimum_size = Vector2(120, 140)
-		es.size = Vector2(120, 140)
+		es.custom_minimum_size = Vector2(100, 120)
+		es.size = Vector2(100, 120)
 		es.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 		es.modulate = Color(1, 0.75, 0.75)
 		es.visible = false
 		arena_center_node.add_child(es)
 		enemy_sprites.append(es)
-	
-	# --- Player Stats Panel Row ---
-	var player_stats_row = HBoxContainer.new()
-	player_stats_row.add_theme_constant_override("separation", 6)
-	player_stats_row.alignment = BoxContainer.ALIGNMENT_CENTER
-	main_vbox.add_child(player_stats_row)
-	
-	for i in range(3):
-		var panel = _create_mini_fighter_panel("player", i)
-		panel.visible = false
-		player_stats_row.add_child(panel)
-		player_panels.append(panel)
 	
 	# --- Info Label ---
 	info_label = Label.new()
@@ -340,7 +388,52 @@ func _create_mini_fighter_panel(side: String, index: int) -> PanelContainer:
 	
 	return panel
 
-func _create_themed_button(text: String, color: Color) -> Button:
+func _create_inline_fighter_panel(side: String, index: int) -> Control:
+	"""Create a compact panel for displaying above arena sprites"""
+	var container = Control.new()
+	container.custom_minimum_size = Vector2(100, 40)
+	container.visible = false
+	
+	var vbox = VBoxContainer.new()
+	vbox.add_theme_constant_override("separation", 1)
+	container.add_child(vbox)
+	
+	var name_lbl = Label.new()
+	name_lbl.add_theme_font_size_override("font_size", 9)
+	name_lbl.add_theme_color_override("font_color", RomanTheme.MARBLE_CREAM if side == "player" else Color(1.0, 0.6, 0.6))
+	name_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	name_lbl.clip_text = true
+	vbox.add_child(name_lbl)
+	
+	var hp_bar = ProgressBar.new()
+	hp_bar.custom_minimum_size = Vector2(95, 6)
+	hp_bar.show_percentage = false
+	var bar_bg = StyleBoxFlat.new()
+	bar_bg.bg_color = Color(0.2, 0.15, 0.15)
+	bar_bg.set_corner_radius_all(2)
+	hp_bar.add_theme_stylebox_override("background", bar_bg)
+	var bar_fill = StyleBoxFlat.new()
+	bar_fill.bg_color = RomanTheme.VICTORY_GREEN if side == "player" else RomanTheme.BLOOD_RED
+	bar_fill.set_corner_radius_all(2)
+	hp_bar.add_theme_stylebox_override("fill", bar_fill)
+	vbox.add_child(hp_bar)
+	
+	var hp_lbl = Label.new()
+	hp_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	hp_lbl.add_theme_font_size_override("font_size", 8)
+	hp_lbl.add_theme_color_override("font_color", RomanTheme.MARBLE_LIGHT)
+	vbox.add_child(hp_lbl)
+	
+	if side == "player":
+		player_name_labels.append(name_lbl)
+		player_hp_bars.append(hp_bar)
+		player_hp_labels.append(hp_lbl)
+	else:
+		enemy_name_labels.append(name_lbl)
+		enemy_hp_bars.append(hp_bar)
+		enemy_hp_labels.append(hp_lbl)
+	
+	return container
 	var btn = Button.new()
 	btn.text = text
 	btn.custom_minimum_size = Vector2(130, 38)
@@ -530,37 +623,66 @@ func _on_gladiators_picked() -> void:
 # ======================== COMBAT LOGIC ========================
 
 func _start_combat_with(fighters: Array[Gladiator]) -> void:
-	# Position player sprites
+	# Position player sprites on LEFT side of arena
 	var player_count = fighters.size()
 	player_base_positions.clear()
+	player_anim_frames.clear()
+	player_anim_index.clear()
+	
 	for i in range(player_count):
-		var y_offset = 20 + i * 55
-		var x_pos = 60 + i * 40
-		player_base_positions.append(Vector2(x_pos, y_offset))
+		var g = fighters[i]
+		# Spread players horizontally on left side (x: 80-200)
+		var x_pos = 80 + i * 60
+		var y_pos = 200  # Positioned in sand area
+		player_base_positions.append(Vector2(x_pos, y_pos))
+		
+		# Position panel above sprite
+		player_panels[i].visible = true
+		player_panels[i].position = Vector2(x_pos - 50, y_pos - 80)
+		
+		# Position sprite
 		player_sprites[i].visible = true
 		player_sprites[i].position = player_base_positions[i]
-		var tex = _get_player_texture(fighters[i].type)
+		var tex = _get_player_texture(g.type)
 		if tex:
 			player_sprites[i].texture = tex
 		player_sprites[i].modulate = Color.WHITE
-		player_panels[i].visible = true
+		
+		# Load animation frames for sprite
+		var frames = _load_animation_frames(g.type, "south")
+		player_anim_frames.append(frames)
+		player_anim_index.append(0)
 	
-	# Generate enemies based on difficulty
+	# Generate enemies and position on RIGHT side of arena
 	var enemy_data_list = _generate_enemies()
 	var enemy_count = enemy_data_list.size()
 	
 	enemy_base_positions.clear()
+	enemy_anim_frames.clear()
+	enemy_anim_index.clear()
+	
 	for i in range(enemy_count):
-		var y_offset = 20 + i * 55
-		var x_pos = 520 - i * 40
-		enemy_base_positions.append(Vector2(x_pos, y_offset))
+		# Spread enemies horizontally on right side (x: 600-720)
+		var x_pos = 650 - i * 60
+		var y_pos = 200  # Positioned in sand area
+		enemy_base_positions.append(Vector2(x_pos, y_pos))
+		
+		# Position panel above sprite
+		enemy_panels[i].visible = true
+		enemy_panels[i].position = Vector2(x_pos - 50, y_pos - 80)
+		
+		# Position sprite
 		enemy_sprites[i].visible = true
 		enemy_sprites[i].position = enemy_base_positions[i]
 		var tex = _get_enemy_texture(enemy_data_list[i]["type"])
 		if tex:
 			enemy_sprites[i].texture = tex
 		enemy_sprites[i].modulate = Color(1.0, 0.7, 0.7)
-		enemy_panels[i].visible = true
+		
+		# Load animation frames for sprite
+		var frames = _load_animation_frames(enemy_data_list[i]["type"], "south")
+		enemy_anim_frames.append(frames)
+		enemy_anim_index.append(0)
 	
 	# Create battle
 	battle = BattleManager.new()
