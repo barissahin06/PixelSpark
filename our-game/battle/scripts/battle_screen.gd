@@ -25,8 +25,8 @@ var return_button: Button
 # Multi-gladiator sprites and panels
 var player_sprites: Array[TextureRect] = []
 var enemy_sprites: Array[TextureRect] = []
-var player_panels: Array[PanelContainer] = []
-var enemy_panels: Array[PanelContainer] = []
+var player_panels: Array[Control] = []
+var enemy_panels: Array[Control] = []
 var player_name_labels: Array[Label] = []
 var player_hp_bars: Array[ProgressBar] = []
 var player_hp_labels: Array[Label] = []
@@ -230,8 +230,8 @@ func _build_ui() -> void:
 		var ps = TextureRect.new()
 		ps.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		ps.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		ps.custom_minimum_size = Vector2(100, 120)
-		ps.size = Vector2(100, 120)
+		ps.custom_minimum_size = Vector2(160, 192)
+		ps.size = Vector2(160, 192)
 		ps.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 		ps.visible = false
 		arena_center_node.add_child(ps)
@@ -249,8 +249,8 @@ func _build_ui() -> void:
 		var es = TextureRect.new()
 		es.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		es.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		es.custom_minimum_size = Vector2(100, 120)
-		es.size = Vector2(100, 120)
+		es.custom_minimum_size = Vector2(160, 192)
+		es.size = Vector2(160, 192)
 		es.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 		es.modulate = Color(1, 0.75, 0.75)
 		es.visible = false
@@ -391,22 +391,25 @@ func _create_mini_fighter_panel(side: String, index: int) -> PanelContainer:
 func _create_inline_fighter_panel(side: String, index: int) -> Control:
 	"""Create a compact panel for displaying above arena sprites"""
 	var container = Control.new()
-	container.custom_minimum_size = Vector2(100, 40)
+	container.custom_minimum_size = Vector2(140, 50)
+	container.size = Vector2(140, 50)
 	container.visible = false
 	
 	var vbox = VBoxContainer.new()
-	vbox.add_theme_constant_override("separation", 1)
+	vbox.add_theme_constant_override("separation", 2)
+	vbox.set_anchors_preset(Control.PRESET_FULL_RECT)
 	container.add_child(vbox)
 	
 	var name_lbl = Label.new()
-	name_lbl.add_theme_font_size_override("font_size", 9)
+	name_lbl.add_theme_font_size_override("font_size", 14)
 	name_lbl.add_theme_color_override("font_color", RomanTheme.MARBLE_CREAM if side == "player" else Color(1.0, 0.6, 0.6))
 	name_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	name_lbl.clip_text = true
 	vbox.add_child(name_lbl)
 	
 	var hp_bar = ProgressBar.new()
-	hp_bar.custom_minimum_size = Vector2(95, 6)
+	hp_bar.custom_minimum_size = Vector2(130, 10)
+	hp_bar.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	hp_bar.show_percentage = false
 	var bar_bg = StyleBoxFlat.new()
 	bar_bg.bg_color = Color(0.2, 0.15, 0.15)
@@ -420,7 +423,7 @@ func _create_inline_fighter_panel(side: String, index: int) -> Control:
 	
 	var hp_lbl = Label.new()
 	hp_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	hp_lbl.add_theme_font_size_override("font_size", 8)
+	hp_lbl.add_theme_font_size_override("font_size", 12)
 	hp_lbl.add_theme_color_override("font_color", RomanTheme.MARBLE_LIGHT)
 	vbox.add_child(hp_lbl)
 	
@@ -433,7 +436,24 @@ func _create_inline_fighter_panel(side: String, index: int) -> Control:
 		enemy_hp_bars.append(hp_bar)
 		enemy_hp_labels.append(hp_lbl)
 	
+	# Make panel clickable for targeting
+	container.gui_input.connect(func(event):
+		if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+			if battle and battle.battle_active and battle.is_player_turn:
+				if side == "player":
+					battle.select_player(index)
+					_update_selection_highlights()
+					info_label.text = "Selected: %s" % battle.get_selected_player().g_name if battle.get_selected_player() else ""
+				elif side == "enemy":
+					battle.select_enemy(index)
+					_update_selection_highlights()
+					var enemy = battle.get_selected_enemy()
+					info_label.text = "Target: %s" % enemy.get("name", "") if enemy else ""
+	)
+	
 	return container
+
+func _create_themed_button(text: String, color: Color) -> Button:
 	var btn = Button.new()
 	btn.text = text
 	btn.custom_minimum_size = Vector2(130, 38)
@@ -632,13 +652,13 @@ func _start_combat_with(fighters: Array[Gladiator]) -> void:
 	for i in range(player_count):
 		var g = fighters[i]
 		# Spread players horizontally on left side (x: 80-200)
-		var x_pos = 80 + i * 60
-		var y_pos = 200  # Positioned in sand area
+		var x_pos = 120 + i * 110
+		var y_pos = 400  # Positioned in sand area
 		player_base_positions.append(Vector2(x_pos, y_pos))
 		
 		# Position panel above sprite
 		player_panels[i].visible = true
-		player_panels[i].position = Vector2(x_pos - 50, y_pos - 80)
+		player_panels[i].position = Vector2(x_pos + 10, y_pos - 65)
 		
 		# Position sprite
 		player_sprites[i].visible = true
@@ -662,14 +682,14 @@ func _start_combat_with(fighters: Array[Gladiator]) -> void:
 	enemy_anim_index.clear()
 	
 	for i in range(enemy_count):
-		# Spread enemies horizontally on right side (x: 600-720)
-		var x_pos = 650 - i * 60
-		var y_pos = 200  # Positioned in sand area
+		# Spread enemies horizontally on right side, pulling them inwards (x: 430-550)
+		var x_pos = 550 - i * 110
+		var y_pos = 400  # Positioned in sand area
 		enemy_base_positions.append(Vector2(x_pos, y_pos))
 		
 		# Position panel above sprite
 		enemy_panels[i].visible = true
-		enemy_panels[i].position = Vector2(x_pos - 50, y_pos - 80)
+		enemy_panels[i].position = Vector2(x_pos + 10, y_pos - 65)
 		
 		# Position sprite
 		enemy_sprites[i].visible = true
@@ -920,6 +940,21 @@ func _on_damage_dealt(target: String, amount: int, blocked: int) -> void:
 			info_label.text = "Dealt %d damage to %s!" % [amount, enemy.get("name", "Enemy")]
 	elif target == "player":
 		var g = battle.get_selected_player()
+		
+		# Figure out which enemy just attacked (defaults to 0, or selected)
+		var attacking_enemy_idx = battle.selected_enemy_index
+		if attacking_enemy_idx >= enemy_sprites.size():
+			attacking_enemy_idx = 0
+			
+		var target_player_idx = battle.selected_player_index
+		if target_player_idx >= player_sprites.size():
+			target_player_idx = 0
+			
+		# Play enemy lunge animation towards player!
+		if not enemy_sprites.is_empty() and attacking_enemy_idx < enemy_sprites.size() and target_player_idx < player_sprites.size():
+			_play_attack_lunge(enemy_sprites[attacking_enemy_idx], player_sprites[target_player_idx].position)
+			AudioManager.play_sfx("sword_hit")
+		
 		if g:
 			if amount == 0:
 				info_label.text = "%s dodged the attack!" % g.g_name
